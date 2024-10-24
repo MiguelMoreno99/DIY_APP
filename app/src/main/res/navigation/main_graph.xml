@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/manageAccountsFragment">
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.example.diyapp.ui.favorites.FavoritesFragment"
+        android:label="fragment_favorites"
+        tools:layout="@layout/fragment_favorites" />
+    <fragment
+        android:id="@+id/manageAccountsFragment"
+        android:name="com.example.diyapp.ui.manageaccount.ManageAccountsFragment"
+        android:label="fragment_manage_accounts"
+        tools:layout="@layout/fragment_manage_accounts" />
+    <fragment
+        android:id="@+id/myPublicationsFragment"
+        android:name="com.example.diyapp.ui.mypublications.MyPublicationsFragment"
+        android:label="fragment_my_publications"
+        tools:layout="@layout/fragment_my_publications" />
+    <fragment
+        android:id="@+id/newPublicationFragment"
+        android:name="com.example.diyapp.ui.newpublication.NewPublicationFragment"
+        android:label="fragment_new_publication"
+        tools:layout="@layout/fragment_new_publication" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.diyapp.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/registerAccountFragment"
+        android:name="com.example.diyapp.ui.registeraccount.RegisterAccountFragment"
+        android:label="fragment_register_account"
+        tools:layout="@layout/fragment_register_account" />
+</navigation>

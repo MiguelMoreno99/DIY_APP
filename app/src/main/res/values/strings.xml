@@ -1,5 +1,12 @@
 <resources>
-    <string name="app_name">DIYapp</string>
+    <string name="app_name">diyapp</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    
+    //Bottom Bar
+    <string name="explore">Explore</string>
+    <string name="favorites">Favorites</string>
+    <string name="create">Create</string>
+    <string name="creations">Creations</string>
+    <string name="account">Account</string>
 </resources>
