@@ -11,9 +11,17 @@
     <string name="account">Account</string>
     <string name="manage_account">Manage Account</string>
 
-    //Login
+    //Login, register, Manage Account
     <string name="mail">Mail</string>
     <string name="password">Password</string>
+    <string name="confirmPassword">Confirm Password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+    <string name="updateInfo">Update Info</string>
+    <string name="updatePhoto">Update Photo</string>
+    <string name="uploadPhoto">Upload Photo</string>
+    <string name="logOut">Log Out</string>
+    <string name="name">Name</string>
+    <string name="lastName">Last Name</string>
+
 </resources>
