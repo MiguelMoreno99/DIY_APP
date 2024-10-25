@@ -3,12 +3,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="buttons">#FF000000</color>
-    <color name="text_box">#FFFFFFFF</color>
-    <color name="background_app">#FF000000</color>
-    <color name="letters_borders">#FFFFFFFF</color>
-    <color name="others">#F24BB8</color>
-    <color name="others_2">#F2B705</color>
+    <color name="buttons">#F26DC4</color>
+    <color name="text_box">#5EBAF2</color>
+    <color name="background_app">#F2CB57</color>
+    <color name="letters_borders"> #38182D</color>
+    <color name="others">#F2B705</color>
+    <color name="others_2">#F24BB8</color>
 
     <color name="red">#FF0000</color>
 

@@ -10,13 +10,13 @@ import com.example.diyapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    //private lateinit var navController: NavController
+    private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        //initUI()
+        initUI()
     }
 
     private fun initUI() {
@@ -24,8 +24,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initNavigation() {
-//        val navHost: NavHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerVieww) as NavHostFragment
-//        navController = navHost.navController
-//        binding.bottomNavView.setupWithNavController(navController)
+        val navHost: NavHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        navController = navHost.navController
+        binding.bottomNavView.setupWithNavController(navController)
     }
 }

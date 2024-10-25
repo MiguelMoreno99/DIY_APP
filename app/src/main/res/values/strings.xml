@@ -1,12 +1,19 @@
 <resources>
-    <string name="app_name">diyapp</string>
+    <string name="app_name">DIY App</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    
+
     //Bottom Bar
     <string name="explore">Explore</string>
     <string name="favorites">Favorites</string>
     <string name="create">Create</string>
     <string name="creations">Creations</string>
     <string name="account">Account</string>
+    <string name="manage_account">Manage Account</string>
+
+    //Login
+    <string name="mail">Mail</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
 </resources>

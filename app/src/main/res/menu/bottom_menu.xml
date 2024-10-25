@@ -16,4 +16,8 @@
         android:id="@+id/myPublicationsFragment"
         android:icon="@drawable/ic_saved"
         android:title="@string/creations" />
+    <item
+        android:id="@+id/manageAccountsFragment"
+        android:icon="@drawable/ic_account_settings"
+        android:title="@string/manage_account" />
 </menu>
