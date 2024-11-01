@@ -7,11 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
-import com.example.diyapp.data.adapter.favorites.feedFavoritesAdapter
-import com.example.diyapp.data.adapter.favorites.feedFavoritesProvider
 import com.example.diyapp.databinding.FragmentNewPublicationBinding
 
 class NewPublicationFragment : Fragment() {
