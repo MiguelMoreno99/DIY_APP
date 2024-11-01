@@ -7,10 +7,10 @@
     android:background="@color/background_app"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".ui.mypublications.MyPublicationsFragment">
+    tools:context=".ui.explore.ExploreFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerFeedCreations"
+        android:id="@+id/recyclerFeedExplore"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

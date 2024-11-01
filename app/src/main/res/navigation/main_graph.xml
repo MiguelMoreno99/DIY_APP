@@ -3,18 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/exploreFragment">
 
     <fragment
         android:id="@+id/favoritesFragment"
         android:name="com.example.diyapp.ui.favorites.FavoritesFragment"
         android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorites" />
-    <fragment
-        android:id="@+id/manageAccountsFragment"
-        android:name="com.example.diyapp.ui.manageaccount.ManageAccountsFragment"
-        android:label="fragment_manage_accounts"
-        tools:layout="@layout/fragment_manage_accounts" />
+    <!--    <fragment-->
+    <!--        android:id="@+id/manageAccountsFragment"-->
+    <!--        android:name="com.example.diyapp.ui.manageaccount.ManageAccountsFragment"-->
+    <!--        android:label="fragment_manage_accounts"-->
+    <!--        tools:layout="@layout/fragment_manage_accounts" />-->
     <fragment
         android:id="@+id/myPublicationsFragment"
         android:name="com.example.diyapp.ui.mypublications.MyPublicationsFragment"
@@ -30,14 +30,15 @@
         android:name="com.example.diyapp.ui.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" />
+    <!--    <fragment-->
+    <!--        android:id="@+id/registerAccountFragment"-->
+    <!--        android:name="com.example.diyapp.ui.registeraccount.RegisterAccountFragment"-->
+    <!--        android:label="fragment_register_account"-->
+    <!--        tools:layout="@layout/fragment_register_account" />-->
     <fragment
-        android:id="@+id/registerAccountFragment"
-        android:name="com.example.diyapp.ui.registeraccount.RegisterAccountFragment"
-        android:label="fragment_register_account"
-        tools:layout="@layout/fragment_register_account" />
-<!--    <fragment-->
-<!--        android:id="@+id/exploreFragment"-->
-<!--        android:name="com.example.diyapp.ui.explore.ExploreFragment"-->
-<!--        android:label="fragment_explore"-->
-<!--        tools:layout="@layout/fragment_explore" />-->
+        android:id="@+id/exploreFragment"
+        android:name="com.example.diyapp.ui.explore.ExploreFragment"
+        android:label="fragment_explore"
+        tools:layout="@layout/fragment_explore" />
+
 </navigation>

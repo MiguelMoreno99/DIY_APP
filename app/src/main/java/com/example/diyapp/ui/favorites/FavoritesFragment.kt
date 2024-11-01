@@ -5,6 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.diyapp.R
+import com.example.diyapp.data.adapter.favorites.feedFavoritesAdapter
+import com.example.diyapp.data.adapter.favorites.feedFavoritesProvider
 import com.example.diyapp.databinding.FragmentFavoritesBinding
 
 class FavoritesFragment : Fragment() {
@@ -17,4 +22,13 @@ class FavoritesFragment : Fragment() {
         _binding = FragmentFavoritesBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerFeedFavorites)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = feedFavoritesAdapter(feedFavoritesProvider.feedFavoritesList)
+    }
+
 }
