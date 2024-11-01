@@ -31,4 +31,17 @@
     <string name="numberLikes">999</string>
     <string name="dateCreation">Date of Creation</string>
     <string name="title">Title</string>
+
+    //New Publication
+    <string name="titlePublication">Title</string>
+    <string name="titleText">Write a Title for the Publication</string>
+    <string name="btnTextImage">Load Main Photo</string>
+    <string name="btnTextImages">Load Instructions Photos</string>
+    <string name="description">Description</string>
+    <string name="descriptionText">Write a Description about your DIY</string>
+    <string name="options">Select an Option Theme for your DIY</string>
+    <string name="instructions">Instructions</string>
+    <string name="instructionsText">Write your detailed instructions</string>
+    <string name="publish">Publish DIY</string>
+
 </resources>
