@@ -1,7 +1,5 @@
 package com.example.diyapp.data.adapter.creations
 
-import com.example.diyapp.data.adapter.creations.feedCreations
-
 class feedCreationsProvider {
     companion object {
         val feedCreationsList = listOf<feedCreations>(

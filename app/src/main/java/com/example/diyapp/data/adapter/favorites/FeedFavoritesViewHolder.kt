@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.diyapp.R
-import com.example.diyapp.data.adapter.favorites.feedFavorites
 
 class feedFavoritesViewHolder(view: View):ViewHolder(view) {
 

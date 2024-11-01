@@ -4,8 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
-import com.example.diyapp.data.adapter.favorites.feedFavorites
-import com.example.diyapp.data.adapter.favorites.feedFavoritesViewHolder
 
 class feedFavoritesAdapter(private val feedFavoritesList: List<feedFavorites>) :
     RecyclerView.Adapter<feedFavoritesViewHolder>() {
