@@ -1,5 +1,9 @@
 package com.example.diyapp.data.adapter.creations
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class feedCreations(
     val idPublication: Int,
     val User: String,
@@ -12,5 +16,5 @@ data class feedCreations(
     val numLikes: Int,
     val state: Boolean,
     val dateCreation: String
-) {
+) : Parcelable {
 }

@@ -1,5 +1,9 @@
 package com.example.diyapp.data.adapter.explore
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class feedExplore(
     val idPublication: Int,
     val User: String,
@@ -12,5 +16,5 @@ data class feedExplore(
     val numLikes: Int,
     val state: Boolean,
     val dateCreation: String
-) {
+) : Parcelable {
 }

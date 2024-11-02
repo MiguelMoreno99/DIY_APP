@@ -13,6 +13,15 @@
         android:theme="@style/Theme.DIYapp"
         tools:targetApi="31">
         <activity
+            android:name=".ui.detail.FavoriteDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.detail.CreationDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.detail.PublicationDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.explore.MainActivity"
             android:exported="true">
             <intent-filter>

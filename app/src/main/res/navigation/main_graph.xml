@@ -9,7 +9,11 @@
         android:id="@+id/favoritesFragment"
         android:name="com.example.diyapp.ui.favorites.FavoritesFragment"
         android:label="fragment_favorites"
-        tools:layout="@layout/fragment_favorites" />
+        tools:layout="@layout/fragment_favorites" >
+        <action
+            android:id="@+id/action_favoritesFragment_to_favoriteDetailActivity"
+            app:destination="@id/favoriteDetailActivity" />
+    </fragment>
     <!--    <fragment-->
     <!--        android:id="@+id/manageAccountsFragment"-->
     <!--        android:name="com.example.diyapp.ui.manageaccount.ManageAccountsFragment"-->
@@ -19,7 +23,11 @@
         android:id="@+id/myPublicationsFragment"
         android:name="com.example.diyapp.ui.mypublications.MyPublicationsFragment"
         android:label="fragment_my_publications"
-        tools:layout="@layout/fragment_my_publications" />
+        tools:layout="@layout/fragment_my_publications" >
+        <action
+            android:id="@+id/action_myPublicationsFragment_to_creationDetailActivity"
+            app:destination="@id/creationDetailActivity" />
+    </fragment>
     <fragment
         android:id="@+id/newPublicationFragment"
         android:name="com.example.diyapp.ui.newpublication.NewPublicationFragment"
@@ -39,6 +47,37 @@
         android:id="@+id/exploreFragment"
         android:name="com.example.diyapp.ui.explore.ExploreFragment"
         android:label="fragment_explore"
-        tools:layout="@layout/fragment_explore" />
+        tools:layout="@layout/fragment_explore" >
+        <action
+            android:id="@+id/action_exploreFragment_to_publicationDetailActivity"
+            app:destination="@id/publicationDetailActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/publicationDetailActivity"
+        android:name="com.example.diyapp.ui.detail.PublicationDetailActivity"
+        android:label="activity_publication_detail"
+        tools:layout="@layout/activity_publication_detail" >
+        <argument
+            android:name="feedPublicationItem"
+            app:argType="com.example.diyapp.data.adapter.explore.feedExplore" />
+    </activity>
+    <activity
+        android:id="@+id/favoriteDetailActivity"
+        android:name="com.example.diyapp.ui.detail.FavoriteDetailActivity"
+        android:label="activity_favorite_detail"
+        tools:layout="@layout/activity_favorite_detail" >
+        <argument
+            android:name="feedFavoriteItem"
+            app:argType="com.example.diyapp.data.adapter.favorites.feedFavorites" />
+    </activity>
+    <activity
+        android:id="@+id/creationDetailActivity"
+        android:name="com.example.diyapp.ui.detail.CreationDetailActivity"
+        android:label="activity_creation_detail"
+        tools:layout="@layout/activity_creation_detail" >
+        <argument
+            android:name="feedCreationItem"
+            app:argType="com.example.diyapp.data.adapter.creations.feedCreations" />
+    </activity>
 
 </navigation>

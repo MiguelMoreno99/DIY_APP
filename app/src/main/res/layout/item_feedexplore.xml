@@ -89,7 +89,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="8dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_heart"
+            android:src="@drawable/ic_see"
             app:tint="@color/others_2"/>
     </LinearLayout>
 
