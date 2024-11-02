@@ -27,6 +27,7 @@
     //FeedItem
     <string name="userName">User Name</string>
     <string name="category">Category</string>
+    <string name="photos">Instruction Photos</string>
     <string name="likes">Likes</string>
     <string name="numberLikes">999</string>
     <string name="dateCreation">Date of Creation</string>
@@ -43,5 +44,11 @@
     <string name="instructions">Instructions</string>
     <string name="instructionsText">Write your detailed instructions</string>
     <string name="publish">Publish DIY</string>
+
+    //Buttons Feed Details
+    <string name="addFavorite">Add to Favorites</string>
+    <string name="removeFavorite">Remove from Favorites</string>
+    <string name="edit">Edit Publication</string>
+    <string name="delete">Delete Publication</string>
 
 </resources>
