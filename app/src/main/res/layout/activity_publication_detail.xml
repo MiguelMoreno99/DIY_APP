@@ -12,7 +12,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:layout_marginBottom="4dp"
         android:text="@string/title"
         android:theme="@style/Menu_Title" />
 
@@ -45,7 +44,7 @@
         android:theme="@style/Feed_Letters2" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewSecondaryPhotos"
+        android:id="@+id/recyclerViewInstructionPhotos"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_below="@id/textViewPhotos"
@@ -56,7 +55,7 @@
         android:id="@+id/textViewDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/recyclerViewSecondaryPhotos"
+        android:layout_below="@id/recyclerViewInstructionPhotos"
         android:layout_marginBottom="28dp"
         android:text="@string/description"
         android:theme="@style/Feed_Letters2" />

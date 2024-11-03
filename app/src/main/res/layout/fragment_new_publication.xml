@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_app"
+    android:layout_marginBottom="80dp"
     android:padding="16dp">
 
     <LinearLayout
@@ -25,6 +26,13 @@
             android:inputType="textCapSentences"
             android:theme="@style/Feed_Letters2" />
 
+        <ImageView
+            android:id="@+id/imageViewMainPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitCenter" />
+
         <Button
             android:id="@+id/btnUploadImage"
             android:layout_width="match_parent"
@@ -33,6 +41,12 @@
             android:backgroundTint="@color/buttons"
             android:text="@string/btnTextImage"
             android:theme="@style/Feed_Letters2" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewInstructionPhotos"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="horizontal" />
 
         <Button
             android:id="@+id/btnUploadMultipleImages"

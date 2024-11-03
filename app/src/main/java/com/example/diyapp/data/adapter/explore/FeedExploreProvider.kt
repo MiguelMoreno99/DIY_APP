@@ -1,6 +1,7 @@
 package com.example.diyapp.data.adapter.explore
 
 class feedExploreProvider {
+
     companion object {
         val feedExploreList = listOf<feedExplore>(
             feedExplore(
@@ -8,8 +9,8 @@ class feedExploreProvider {
                 "Migjorale2",
                 "DIY",
                 "Decoration",
-                "https://images.squarespace-cdn.com/content/v1/63dde481bbabc6724d988548/240ad38c-edfa-4611-85e1-6bc1e27230a9/_116d2caf-fdfb-4e8a-af69-02d65dee6bc7.jpg",
-                "https://www.sweedesi.com/cdn/shop/products/diy-photo-frame-p-tara-942024.jpg?v=1701079784&width=2047",
+                null,
+                null,
                 "Estas son las instrucciones",
                 "Esta es la descipcion",
                 10,
@@ -21,8 +22,8 @@ class feedExploreProvider {
                 "Oscar123",
                 "DIY 2",
                 "Nature",
-                "https://images.squarespace-cdn.com/content/v1/63dde481bbabc6724d988548/240ad38c-edfa-4611-85e1-6bc1e27230a9/_116d2caf-fdfb-4e8a-af69-02d65dee6bc7.jpg",
-                "https://www.sweedesi.com/cdn/shop/products/diy-photo-frame-p-tara-942024.jpg?v=1701079784&width=2047",
+                null,
+                null,
                 "Estas son las instrucciones",
                 "Esta es la descipcion",
                 5,
@@ -34,8 +35,8 @@ class feedExploreProvider {
                 "Miguel233",
                 "DIY 3",
                 "Wood",
-                "https://images.squarespace-cdn.com/content/v1/63dde481bbabc6724d988548/240ad38c-edfa-4611-85e1-6bc1e27230a9/_116d2caf-fdfb-4e8a-af69-02d65dee6bc7.jpg",
-                "https://www.sweedesi.com/cdn/shop/products/diy-photo-frame-p-tara-942024.jpg?v=1701079784&width=2047",
+                null,
+                null,
                 "Estas son las instrucciones",
                 "Esta es la descipcion",
                 78,
