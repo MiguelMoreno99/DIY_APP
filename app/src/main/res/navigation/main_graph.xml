@@ -37,12 +37,11 @@
         android:id="@+id/loginFragment"
         android:name="com.example.diyapp.ui.login.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
-    <!--    <fragment-->
-    <!--        android:id="@+id/registerAccountFragment"-->
-    <!--        android:name="com.example.diyapp.ui.registeraccount.RegisterAccountFragment"-->
-    <!--        android:label="fragment_register_account"-->
-    <!--        tools:layout="@layout/fragment_register_account" />-->
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registerAccountActivity"
+            app:destination="@id/registerAccountActivity" />
+    </fragment>
     <fragment
         android:id="@+id/exploreFragment"
         android:name="com.example.diyapp.ui.explore.ExploreFragment"
@@ -79,5 +78,10 @@
             android:name="feedCreationItem"
             app:argType="com.example.diyapp.data.adapter.creations.feedCreations" />
     </activity>
+    <activity
+        android:id="@+id/registerAccountActivity"
+        android:name="com.example.diyapp.ui.registeraccount.RegisterAccountActivity"
+        android:label="activity_register_account"
+        tools:layout="@layout/activity_register_account" />
 
 </navigation>

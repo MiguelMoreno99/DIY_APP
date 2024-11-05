@@ -13,6 +13,9 @@
         android:theme="@style/Theme.DIYapp"
         tools:targetApi="31">
         <activity
+            android:name=".ui.registeraccount.RegisterAccountActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.detail.FavoriteDetailActivity"
             android:exported="false" />
         <activity

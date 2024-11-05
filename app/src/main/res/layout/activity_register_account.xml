@@ -6,12 +6,12 @@
     android:background="@color/background_app"
     android:orientation="vertical"
     android:padding="16dp"
-
-    tools:context=".ui.manageaccount.ManageAccountsFragment">
+    tools:context=".ui.registeraccount.RegisterAccountActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
         android:layout_marginBottom="24dp"
         android:gravity="center"
         android:orientation="horizontal">
@@ -30,7 +30,8 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/buttons"
             android:text="@string/uploadPhoto"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:theme="@style/Feed_Letters" />
     </LinearLayout>
 
     <EditText
@@ -43,7 +44,8 @@
         android:background="@drawable/edittext_background"
         android:hint="@string/mail"
         android:inputType="textPersonName"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:theme="@style/Feed_Letters" />
 
     <EditText
         android:id="@+id/nameEditText"
@@ -55,7 +57,8 @@
         android:background="@drawable/edittext_background"
         android:hint="@string/name"
         android:inputType="textPersonName"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:theme="@style/Feed_Letters" />
 
     <EditText
         android:id="@+id/lastNameEditText"
@@ -67,7 +70,8 @@
         android:background="@drawable/edittext_background"
         android:hint="@string/lastName"
         android:inputType="textPersonName"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:theme="@style/Feed_Letters" />
 
     <EditText
         android:id="@+id/passwordEditText"
@@ -79,7 +83,8 @@
         android:background="@drawable/edittext_background"
         android:hint="@string/password"
         android:inputType="textPassword"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:theme="@style/Feed_Letters" />
 
     <EditText
         android:id="@+id/confirmPasswordEditText"
@@ -91,7 +96,8 @@
         android:background="@drawable/edittext_background"
         android:hint="@string/confirmPassword"
         android:inputType="textPassword"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:theme="@style/Feed_Letters" />
 
     <Button
         android:id="@+id/applyChangesButton"
@@ -101,6 +107,6 @@
         android:layout_marginTop="56dp"
         android:backgroundTint="@color/buttons"
         android:text="@string/register"
-        android:textColor="@android:color/white" />
-
+        android:textColor="@android:color/white"
+        android:theme="@style/Feed_Letters" />
 </LinearLayout>

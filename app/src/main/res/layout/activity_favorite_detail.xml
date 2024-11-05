@@ -1,10 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_app"
+    android:padding="16dp"
     tools:context=".ui.detail.FavoriteDetailActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="@string/title"
+            android:theme="@style/Menu_Title" />
+
+        <TextView
+            android:id="@+id/textViewTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/category"
+            android:theme="@style/Feed_Letters" />
+
+        <ImageView
+            android:id="@+id/imageViewMain"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="@string/app_name"
+            android:scaleType="fitCenter"
+            android:src="@drawable/logo" />
+
+        <TextView
+            android:id="@+id/textViewPhotos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/photos"
+            android:theme="@style/Feed_Letters2" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewInstructionPhotos"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:orientation="horizontal" />
+        <TextView
+            android:id="@+id/textViewDescriptionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:text="@string/description"
+            android:theme="@style/Feed_Letters" />
+        <TextView
+            android:id="@+id/textViewDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="28dp"
+            android:text="@string/description"
+            android:theme="@style/Feed_Letters2" />
+        <TextView
+            android:id="@+id/textViewInstructions2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:text="@string/instructions"
+            android:theme="@style/Feed_Letters" />
+        <TextView
+            android:id="@+id/textViewInstructions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/instructions"
+            android:theme="@style/Feed_Letters2" />
+
+        <Button
+            android:id="@+id/buttonRemoveFromFavorites"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="80dp"
+            android:backgroundTint="@color/buttons"
+            android:text="@string/removeFavorite"
+            android:theme="@style/Feed_Letters" />
+
+    </LinearLayout>
+</ScrollView>
