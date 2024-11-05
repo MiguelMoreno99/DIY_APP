@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
 import com.example.diyapp.data.adapter.create.MultipleImagesAdapterAdapter
-import com.example.diyapp.data.adapter.creations.feedCreations
 import com.example.diyapp.databinding.ActivityCreationDetailBinding
 
 class CreationDetailActivity : AppCompatActivity() {
@@ -29,6 +28,7 @@ class CreationDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
         loadPublicationInfo()
     }
+
     private fun loadPublicationInfo() {
         tvTitle = findViewById(R.id.textViewTitle)
         tvCategory = findViewById(R.id.textViewTheme)
