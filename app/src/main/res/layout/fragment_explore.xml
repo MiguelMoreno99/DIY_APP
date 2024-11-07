@@ -9,9 +9,16 @@
     android:padding="16dp"
     tools:context=".ui.explore.ExploreFragment">
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/svExplore"
+        android:layout_width="match_parent"
+        android:background="@color/others"
+        android:layout_height="50dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerFeedExplore"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_marginTop="60dp"
+        android:layout_height="wrap_content" />
 
 </FrameLayout>

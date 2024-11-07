@@ -55,4 +55,15 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
 
+    //Room in libs.versions.toml
+    //implementation(libs.room.compiler)
+    //implementation(libs.room.ktx)
+
+    //Retrofit in libs.versions.toml
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+
+    //Coroutines in libs.versions.toml
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.android)
 }
