@@ -16,7 +16,6 @@ class feedCreationsAdapter(
 ) :
     RecyclerView.Adapter<feedCreationsAdapter.feedCreationsViewHolder>() {
 
-    // Lista filtrada
     private var filteredList = feedCreationsList.toMutableList()
 
     inner class feedCreationsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -34,7 +33,6 @@ class feedCreationsAdapter(
             LikesCountNumber.text = feedCreationsModel.numLikes.toString()
             CreationDate.text = feedCreationsModel.dateCreation
 
-            // Decodificar y mostrar la portada
             val photoMainBytes = Base64.decode(feedCreationsModel.photoMain, Base64.DEFAULT)
             val photoMainBitmap =
                 BitmapFactory.decodeByteArray(photoMainBytes, 0, photoMainBytes.size)
@@ -55,21 +53,20 @@ class feedCreationsAdapter(
     }
 
     override fun getItemCount(): Int {
-        return filteredList.size //se agrega
+        return filteredList.size
     }
 
     override fun onBindViewHolder(holder: feedCreationsViewHolder, position: Int) {
-        val item = feedCreationsList[position]
+        val item = filteredList[position]
         holder.render(item)
     }
 
-    // Método para filtrar
     fun filter(query: String) {
         filteredList = if (query.isEmpty()) {
             feedCreationsList.toMutableList()
         } else {
             feedCreationsList.filter {
-                it.Theme.contains(query, ignoreCase = true) // Filtrar por título
+                it.Theme.contains(query, ignoreCase = true)
             }.toMutableList()
         }
         notifyDataSetChanged()

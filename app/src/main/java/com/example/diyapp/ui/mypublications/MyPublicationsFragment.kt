@@ -37,7 +37,6 @@ class MyPublicationsFragment : Fragment() {
         binding.recyclerFeedCreations.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerFeedCreations.adapter = adapter
 
-        // Configurar el SearchView
         binding.svCreations.setOnQueryTextListener(object :
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {

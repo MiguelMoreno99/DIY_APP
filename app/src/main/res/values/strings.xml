@@ -50,5 +50,7 @@
     <string name="removeFavorite">Remove from Favorites</string>
     <string name="edit">Edit Publication</string>
     <string name="delete">Delete Publication</string>
+    <string name="update_main_image">Update Main Photo</string>
+    <string name="update_instruction_photos">Update Instructions Photos</string>
 
 </resources>

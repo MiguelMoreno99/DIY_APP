@@ -7,9 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.diyapp.R
-import com.example.diyapp.data.adapter.explore.feedExploreAdapter
 import com.example.diyapp.data.adapter.favorites.feedFavoritesAdapter
 import com.example.diyapp.data.adapter.favorites.feedFavoritesProvider
 import com.example.diyapp.databinding.FragmentFavoritesBinding

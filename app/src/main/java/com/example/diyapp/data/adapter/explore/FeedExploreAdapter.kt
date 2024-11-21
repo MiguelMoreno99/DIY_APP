@@ -16,7 +16,6 @@ class feedExploreAdapter(
 ) :
     RecyclerView.Adapter<feedExploreAdapter.feedExploreViewHolder>() {
 
-    // Lista filtrada
     private var filteredList = feedExplorerList.toMutableList()
 
     inner class feedExploreViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -34,7 +33,6 @@ class feedExploreAdapter(
             LikesCountNumber.text = feedExploreModel.numLikes.toString()
             CreationDate.text = feedExploreModel.dateCreation
 
-            // Decodificar y mostrar la portada
             val photoMainBytes = Base64.decode(feedExploreModel.photoMain, Base64.DEFAULT)
             val photoMainBitmap =
                 BitmapFactory.decodeByteArray(photoMainBytes, 0, photoMainBytes.size)
@@ -55,21 +53,20 @@ class feedExploreAdapter(
     }
 
     override fun getItemCount(): Int {
-        return filteredList.size //se agrega
+        return filteredList.size
     }
 
     override fun onBindViewHolder(holder: feedExploreViewHolder, position: Int) {
-        val item = filteredList[position] //se agrega
+        val item = filteredList[position]
         holder.render(item)
     }
 
-    // Método para filtrar
     fun filter(query: String) {
         filteredList = if (query.isEmpty()) {
             feedExplorerList.toMutableList()
         } else {
             feedExplorerList.filter {
-                it.Theme.contains(query, ignoreCase = true) // Filtrar por título
+                it.Theme.contains(query, ignoreCase = true)
             }.toMutableList()
         }
         notifyDataSetChanged()

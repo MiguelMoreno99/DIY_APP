@@ -39,11 +39,9 @@ class NewPublicationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Opciones para el Spinner
-        val options = listOf("Nature", "Wood", "Garden")
+        val options = listOf("Reciclaje", "Pintura", "Decoración", "Carpintería", "Costura", "Textil", "Joyería", "Papelería", "Cerámica", "Modelado", "Jardinería", "Organización", "Regalos", "Juguetes", "Muebles")
         val spinner: Spinner = view.findViewById(R.id.spinnerOptions)
 
-        // Adaptador para el Spinner
         val adapter = ArrayAdapter(view.context, android.R.layout.simple_spinner_item, options)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = adapter
@@ -81,7 +79,5 @@ class NewPublicationFragment : Fragment() {
         btnImages.setOnClickListener {
             pickMedia2.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
-
-
     }
 }
