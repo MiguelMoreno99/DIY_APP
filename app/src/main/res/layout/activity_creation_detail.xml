@@ -97,7 +97,7 @@
             android:inputType="textMultiLine"
             android:minLines="5"
             android:padding="8dp"
-            android:theme="@style/Feed_Letters" />
+            android:theme="@style/Feed_Letters2" />
 
         <TextView
             android:id="@+id/textViewInstructionsText"
@@ -115,7 +115,7 @@
             android:inputType="textMultiLine"
             android:minLines="5"
             android:padding="8dp"
-            android:theme="@style/Feed_Letters" />
+            android:theme="@style/Feed_Letters2" />
 
         <Button
             android:id="@+id/buttonEditPublication"
