@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.diyapp.data.adapter.explore.feedExplore
 import com.example.diyapp.data.adapter.explore.feedExploreAdapter
 import com.example.diyapp.data.adapter.explore.feedExploreProvider
 import com.example.diyapp.databinding.FragmentExploreBinding
@@ -23,6 +22,7 @@ class ExploreFragment : Fragment() {
     private var _binding: FragmentExploreBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: feedExploreAdapter
+
     //private val feed = List<feedExplore>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,15 +35,30 @@ class ExploreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = feedExploreAdapter(feedExploreProvider.feedExploreList) { item -> //(cambiar por feed)
-            findNavController().navigate(
-                ExploreFragmentDirections.actionExploreFragmentToPublicationDetailActivity(
-                    item
+        adapter =
+            feedExploreAdapter(feedExploreProvider.feedExploreList) { item ->
+                findNavController().navigate(
+                    ExploreFragmentDirections.actionExploreFragmentToPublicationDetailActivity(
+                        item
+                    )
                 )
-            )
-        }
+            }
         binding.recyclerFeedExplore.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerFeedExplore.adapter = adapter
+
+        // Configurar el SearchView
+        binding.svExplore.setOnQueryTextListener(object :
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                query?.let { adapter.filter(it) }
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let { adapter.filter(it) }
+                return true
+            }
+        })
 
 //        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerFeedExplore)
 //        recyclerView.layoutManager = LinearLayoutManager(requireContext())
