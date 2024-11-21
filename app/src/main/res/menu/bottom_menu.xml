@@ -20,8 +20,4 @@
         android:id="@+id/loginFragment"
         android:icon="@drawable/ic_account"
         android:title="@string/account" />
-    <!--    <item-->
-    <!--        android:id="@+id/manageAccountsFragment"-->
-    <!--        android:icon="@drawable/ic_account_settings"-->
-    <!--        android:title="@string/manage_account" />-->
 </menu>
