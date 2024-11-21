@@ -1,17 +1,22 @@
 package com.example.diyapp.ui.detail
 
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
+import com.example.diyapp.data.adapter.create.MultipleImagesAdapterAdapter
 import com.example.diyapp.data.adapter.explore.InstructionsAdapter
 import com.example.diyapp.databinding.ActivityCreationDetailBinding
 
@@ -25,6 +30,10 @@ class CreationDetailActivity : AppCompatActivity() {
     private lateinit var etDescription: EditText
     private lateinit var etInstructions: EditText
     private lateinit var args: CreationDetailActivityArgs
+    private lateinit var imageUris: MutableList<Uri>
+    private lateinit var recyclerViewAdapter: MultipleImagesAdapterAdapter
+    private lateinit var btnImage: Button
+    private lateinit var btnImages: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -35,12 +44,30 @@ class CreationDetailActivity : AppCompatActivity() {
 
     private fun loadPublicationInfo() {
         etTitle = findViewById(R.id.editTextTitle)
-        val options = listOf("Reciclaje", "Pintura", "Decoración", "Carpintería", "Costura", "Textil", "Joyería", "Papelería", "Cerámica", "Modelado", "Jardinería", "Organización", "Regalos", "Juguetes", "Muebles")
+        val options = listOf(
+            "Reciclaje",
+            "Pintura",
+            "Decoración",
+            "Carpintería",
+            "Costura",
+            "Textil",
+            "Joyería",
+            "Papelería",
+            "Cerámica",
+            "Modelado",
+            "Jardinería",
+            "Organización",
+            "Regalos",
+            "Juguetes",
+            "Muebles"
+        )
         spCategory = findViewById(R.id.spinnerOptionsTheme)
         etDescription = findViewById(R.id.editTextDescription)
         etInstructions = findViewById(R.id.editTextInstructions)
         ivMainPhoto = findViewById(R.id.imageViewMain)
+        btnImage = findViewById(R.id.buttonUpdateMainImage)
         rvInstructionsPhotos = findViewById(R.id.recyclerViewInstructionPhotos)
+        btnImages = findViewById(R.id.buttonUpdateInstructionPhotos)
         args = CreationDetailActivityArgs.fromBundle(intent.extras!!)
         val item = args.feedCreationItem
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, options)
@@ -58,6 +85,33 @@ class CreationDetailActivity : AppCompatActivity() {
         rvInstructionsPhotos.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvInstructionsPhotos.adapter = InstructionsAdapter(item.photoProcess)
+
+        imageUris = mutableListOf()
+        recyclerViewAdapter = MultipleImagesAdapterAdapter(imageUris)
+
+        val pickMedia =
+            registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+                if (uri != null) {
+                    ivMainPhoto.setImageURI(uri)
+                }
+            }
+
+        val pickMedia2 =
+            registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
+                if (uris.isNotEmpty()) {
+                    imageUris.addAll(uris)
+                    rvInstructionsPhotos.adapter = recyclerViewAdapter
+                    recyclerViewAdapter.notifyDataSetChanged()
+                }
+            }
+
+        btnImage.setOnClickListener {
+            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
+
+        btnImages.setOnClickListener {
+            pickMedia2.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
     }
 
     private fun setSpinnerSelection(spinner: Spinner, theme: String) {
