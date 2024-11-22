@@ -47,15 +47,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun isUserLoggedIn(): Boolean {
+    private fun isUserLoggedIn(): Boolean {
         val sharedPref = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
         return sharedPref.getBoolean("isLoggedIn", false)
     }
 
-    fun setUserLoggedIn(loggedIn: Boolean, email: String) {
+    fun setUserLoggedIn(
+        loggedIn: Boolean,
+        email: String,
+        name: String,
+        lastname: String,
+        photo: String
+    ) {
         val sharedPref = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
         with(sharedPref.edit()) {
             putString("email", email)
+            putString("name", name)
+            putString("lastname", lastname)
+            putString("photo", photo)
             putBoolean("isLoggedIn", loggedIn)
             apply()
         }

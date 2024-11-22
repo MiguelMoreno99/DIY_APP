@@ -1,17 +1,12 @@
 package com.example.diyapp.ui.mypublications
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.diyapp.R
-import com.example.diyapp.data.adapter.create.MultipleImagesAdapterAdapter
 import com.example.diyapp.data.adapter.creations.feedCreationsAdapter
 import com.example.diyapp.data.adapter.creations.feedCreationsProvider
 import com.example.diyapp.databinding.FragmentMyPublicationsBinding
