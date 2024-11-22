@@ -1,6 +1,7 @@
 package com.example.diyapp.ui.favorites
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.diyapp.data.adapter.explore.feedExploreProvider
 import com.example.diyapp.data.adapter.favorites.feedFavoritesAdapter
 import com.example.diyapp.data.adapter.favorites.feedFavoritesProvider
 import com.example.diyapp.databinding.FragmentFavoritesBinding
@@ -15,6 +17,9 @@ import com.example.diyapp.domain.APIService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -59,27 +64,67 @@ class FavoritesFragment : Fragment() {
         })
     }
 
-//    private fun getRetrofit(): Retrofit {
-//        return Retrofit.Builder().baseUrl("baseurl/")
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-//    }
-//
-//    private fun ShowFavoritesByUser(query: String) {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val call = getRetrofit().create(APIService::class.java).getFavoritesByUser("$query/mmd.-@hotmail.com")
-//            val feed = call.body()
-//            activity?.runOnUiThread() {
-//                if (call.isSuccessful) {
-//                    feed?.User.toString()
-//                } else {
-//                    showError()
-//                }
-//            }
-//        }
-//    }
-//
-//    private fun showError() {
-//        Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
-//    }
+    private fun getRetrofit(): Retrofit {
+        // Configuración del interceptor de logging
+        val logging = HttpLoggingInterceptor()
+        logging.level =
+            HttpLoggingInterceptor.Level.BODY
+
+        // Configuración del OkHttpClient con el interceptor
+        val client = OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .build()
+
+        // Crea y retorna el objeto Retrofit con el cliente configurado
+        return Retrofit.Builder()
+            .baseUrl("http://myprojectapi.com.preview.services/") // Cambia la URL según sea necesario http://192.168.100.18/
+            .client(client)  // Usar el cliente con el interceptor
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    private fun ShowFeed() {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val call = getRetrofit().create(APIService::class.java).getFeedExplore()
+
+                // Ver la respuesta del servidor como String
+                val responseBody = call.body() // O simplemente body() si es un JSON mapeable
+                Log.d("API Response", "Server Response: $responseBody")
+
+                // Deserializa a la clase
+                val feed = call.body()
+
+                withContext(Dispatchers.Main) {
+                    if (call.isSuccessful) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Feed cargado correctamente",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        // Procesa la respuesta aquí
+                        if (feed != null) {
+                            feedExploreProvider.feedExploreList = feed
+
+                            // Notifica al adaptador en el hilo principal
+                            withContext(Dispatchers.Main) {
+                                adapter.notifyDataSetChanged()
+                            }
+                        }
+                    } else {
+                        showError()
+                    }
+                }
+            } catch (e: Exception) {
+                activity?.runOnUiThread {
+                    Toast.makeText(requireContext(), "Excepción: ${e.message}", Toast.LENGTH_LONG)
+                        .show()
+                    Log.e("API Error", "Error: ${e.message}")
+                }
+            }
+        }
+    }
+    private fun showError() {
+        Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
+    }
 }

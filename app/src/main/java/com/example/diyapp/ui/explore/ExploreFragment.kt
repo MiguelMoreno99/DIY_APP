@@ -64,23 +64,6 @@ class ExploreFragment : Fragment() {
             }
         })
     }
-
-//    private fun autentication(): OkHttpClient {
-//        return OkHttpClient.Builder()
-//            .addInterceptor { chain ->
-//                val original = chain.request()
-//                val authenticatedRequest = original.newBuilder()
-//                    .header(
-//                        "Authorization",
-//                        Credentials.basic("root", "")
-//                    )
-//                    .build()
-//                chain.proceed(authenticatedRequest)
-//            }
-//            .build()
-//    }
-//.client(autentication()) // Asocia el cliente autenticado
-
     private fun getRetrofit(): Retrofit {
         // Configuración del interceptor de logging
         val logging = HttpLoggingInterceptor()
@@ -141,7 +124,6 @@ class ExploreFragment : Fragment() {
             }
         }
     }
-
     private fun showError() {
         Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
     }
