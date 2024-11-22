@@ -9,10 +9,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
@@ -34,6 +36,8 @@ class CreationDetailActivity : AppCompatActivity() {
     private lateinit var recyclerViewAdapter: MultipleImagesAdapterAdapter
     private lateinit var btnImage: Button
     private lateinit var btnImages: Button
+    private lateinit var btnEdit: Button
+    private lateinit var btnDelete: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -68,6 +72,8 @@ class CreationDetailActivity : AppCompatActivity() {
         btnImage = findViewById(R.id.buttonUpdateMainImage)
         rvInstructionsPhotos = findViewById(R.id.recyclerViewInstructionPhotos)
         btnImages = findViewById(R.id.buttonUpdateInstructionPhotos)
+        btnEdit = findViewById(R.id.buttonEditPublication)
+        btnDelete = findViewById(R.id.buttonDeletePublication)
         args = CreationDetailActivityArgs.fromBundle(intent.extras!!)
         val item = args.feedCreationItem
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, options)
@@ -112,6 +118,15 @@ class CreationDetailActivity : AppCompatActivity() {
         btnImages.setOnClickListener {
             pickMedia2.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
+
+        btnEdit.setOnClickListener {
+            validateFields()
+        }
+
+        btnDelete.setOnClickListener {
+            Toast.makeText(this, "Publication Deleted", Toast.LENGTH_SHORT).show()
+            finish() // asegúrate de que se llame después de que se complete la tarea asíncrona.
+        }
     }
 
     private fun setSpinnerSelection(spinner: Spinner, theme: String) {
@@ -123,6 +138,18 @@ class CreationDetailActivity : AppCompatActivity() {
                 spinner.setSelection(i)
                 break
             }
+        }
+    }
+
+    private fun validateFields() {
+        val title = etTitle.text.toString()
+        val description = etDescription.text.toString()
+        val instructions = etInstructions.text.toString()
+        if (title == "" || description == "" || instructions == ""){
+            Toast.makeText(this, "Fill all the fields First!", Toast.LENGTH_SHORT).show()
+        }else{
+            Toast.makeText(this, "Publication Edited!", Toast.LENGTH_SHORT).show()
+            finish() // asegúrate de que se llame después de que se complete la tarea asíncrona.
         }
     }
 }

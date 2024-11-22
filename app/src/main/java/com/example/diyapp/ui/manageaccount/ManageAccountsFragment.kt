@@ -79,5 +79,24 @@ class ManageAccountsFragment : Fragment() {
         updatePhotoButton.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
+
+        updateInfoButton.setOnClickListener {
+            validateFields()
+        }
+    }
+
+    private fun validateFields() {
+        val name = etName.text.toString()
+        val lastname = etLastName.text.toString()
+        val password = etPassword.text.toString()
+        val confirmPassword = etConfirmPassword.text.toString()
+        if (name == "" || lastname == "" || password == "" || confirmPassword == ""){
+            Toast.makeText(requireContext(), "Fill all the fields First!", Toast.LENGTH_SHORT).show()
+        }else if(password != confirmPassword){
+            Toast.makeText(requireContext(), "Please Verify Passwords!", Toast.LENGTH_SHORT).show()
+        }else{
+            Toast.makeText(requireContext(), "User Updated", Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.exploreFragment)
+        }
     }
 }

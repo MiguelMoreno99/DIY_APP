@@ -2,6 +2,7 @@ package com.example.diyapp.ui.explore
 
 import android.content.Context
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -10,6 +11,10 @@ import com.example.diyapp.R
 import com.example.diyapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        var instance: MainActivity? = null
+    }
+
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,9 +37,30 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.exploreFragment -> navController.navigate(R.id.exploreFragment)
-                R.id.newPublicationFragment -> navController.navigate(R.id.newPublicationFragment)
-                R.id.myPublicationsFragment -> navController.navigate(R.id.myPublicationsFragment)
-                R.id.favoritesFragment -> navController.navigate(R.id.favoritesFragment)
+                R.id.newPublicationFragment -> {
+                    if (isUserLoggedIn()) {
+                        navController.navigate(R.id.newPublicationFragment)
+                    } else {
+                        navController.navigate(R.id.loginFragment)
+                        Toast.makeText(this, "You need to Login First!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                R.id.myPublicationsFragment -> {
+                    if (isUserLoggedIn()) {
+                        navController.navigate(R.id.myPublicationsFragment)
+                    } else {
+                        navController.navigate(R.id.loginFragment)
+                        Toast.makeText(this, "You need to Login First!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                R.id.favoritesFragment -> {
+                    if (isUserLoggedIn()) {
+                        navController.navigate(R.id.favoritesFragment)
+                    } else {
+                        navController.navigate(R.id.loginFragment)
+                        Toast.makeText(this, "You need to Login First!", Toast.LENGTH_SHORT).show()
+                    }
+                }
                 R.id.loginFragment -> {
                     if (isUserLoggedIn()) {
                         navController.navigate(R.id.manageAccountsFragment)
