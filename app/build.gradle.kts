@@ -66,4 +66,6 @@ dependencies {
     //Coroutines in libs.versions.toml
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
+
+    implementation (libs.logging.interceptor)
 }

@@ -58,27 +58,27 @@ class MyPublicationsFragment : Fragment() {
         })
     }
 
-    private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder().baseUrl("baseurl/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    private fun ShowFeedByUser(query: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIService::class.java).getFeedByUser("$query/mmd.-@hotmail.com")
-            val feed = call.body()
-            activity?.runOnUiThread() {
-                if (call.isSuccessful) {
-                    feed?.User.toString()
-                } else {
-                    showError()
-                }
-            }
-        }
-    }
-
-    private fun showError() {
-        Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
-    }
+//    private fun getRetrofit(): Retrofit {
+//        return Retrofit.Builder().baseUrl("baseurl/")
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//    }
+//
+//    private fun ShowFeedByUser(query: String) {
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val call = getRetrofit().create(APIService::class.java).getCreationsByUser("$query/mmd.-@hotmail.com")
+//            val feed = call.body()
+//            activity?.runOnUiThread() {
+//                if (call.isSuccessful) {
+//                    feed?.User.toString()
+//                } else {
+//                    showError()
+//                }
+//            }
+//        }
+//    }
+//
+//    private fun showError() {
+//        Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
+//    }
 }

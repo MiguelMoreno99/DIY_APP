@@ -6,16 +6,16 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class feedExplore(
-    @SerializedName("idPublication") val idPublication: Int, //EL SERIALIZED NAME DEBE SER EXACTAMENTE IGUAL AL DE LA API
-    @SerializedName("User") val User: String,
-    @SerializedName("title") val title: String,
-    @SerializedName("Theme") val Theme: String,
-    @SerializedName("photoMain") val photoMain: String,
-    @SerializedName("photoProcess") val photoProcess: List<String>,
-    @SerializedName("instructions") val instructions: String,
-    @SerializedName("description") val description: String,
-    @SerializedName("numLikes") val numLikes: Int,
-    @SerializedName("state") val state: Boolean,
-    @SerializedName("dateCreation") val dateCreation: String
+    @SerializedName("id_publicacion") val idPublication: Int, //EL SERIALIZED NAME DEBE SER EXACTAMENTE IGUAL AL DE LA API
+    @SerializedName("id_usuarios") val User: String,
+    @SerializedName("titulo") val title: String,
+    @SerializedName("nombre_tema") val Theme: String,
+    @SerializedName("foto_portada") val photoMain: String,
+    @SerializedName("descripcion") val description: String,
+    @SerializedName("num_likes") val numLikes: Int,
+    @SerializedName("estado") val state: Int,
+    @SerializedName("fecha_creacion") val dateCreation: String,
+    @SerializedName("instrucciones") val instructions: String,
+    @SerializedName("foto_proceso") val photoProcess: List<String>
 ) : Parcelable {
 }

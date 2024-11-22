@@ -1,6 +1,7 @@
 package com.example.diyapp.ui.explore
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,9 @@ import com.example.diyapp.domain.APIService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -23,7 +27,6 @@ class ExploreFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var adapter: feedExploreAdapter
 
-    //private val feed = List<feedExplore>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,6 +37,8 @@ class ExploreFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        ShowFeed()
 
         adapter =
             feedExploreAdapter(feedExploreProvider.feedExploreList) { item ->
@@ -60,21 +65,78 @@ class ExploreFragment : Fragment() {
         })
     }
 
+//    private fun autentication(): OkHttpClient {
+//        return OkHttpClient.Builder()
+//            .addInterceptor { chain ->
+//                val original = chain.request()
+//                val authenticatedRequest = original.newBuilder()
+//                    .header(
+//                        "Authorization",
+//                        Credentials.basic("root", "")
+//                    )
+//                    .build()
+//                chain.proceed(authenticatedRequest)
+//            }
+//            .build()
+//    }
+//.client(autentication()) // Asocia el cliente autenticado
+
     private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder().baseUrl("baseurl/")
+        // Configuración del interceptor de logging
+        val logging = HttpLoggingInterceptor()
+        logging.level =
+            HttpLoggingInterceptor.Level.BODY
+
+        // Configuración del OkHttpClient con el interceptor
+        val client = OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .build()
+
+        // Crea y retorna el objeto Retrofit con el cliente configurado
+        return Retrofit.Builder()
+            .baseUrl("http://myprojectapi.com.preview.services/") // Cambia la URL según sea necesario http://192.168.100.18/
+            .client(client)  // Usar el cliente con el interceptor
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    private fun ShowFeed(query: String) {
+    private fun ShowFeed() {
         CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIService::class.java).getFeed()
-            val feed = call.body()
-            activity?.runOnUiThread() {
-                if (call.isSuccessful) {
-                    feed?.User.toString()
-                } else {
-                    showError()
+            try {
+                val call = getRetrofit().create(APIService::class.java).getFeedExplore()
+
+                // Ver la respuesta del servidor como String
+                val responseBody = call.body() // O simplemente body() si es un JSON mapeable
+                Log.d("API Response", "Server Response: $responseBody")
+
+                // Deserializa a la clase
+                val feed = call.body()
+
+                withContext(Dispatchers.Main) {
+                    if (call.isSuccessful) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Feed cargado correctamente",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        // Procesa la respuesta aquí
+                        if (feed != null) {
+                            feedExploreProvider.feedExploreList = feed
+
+                            // Notifica al adaptador en el hilo principal
+                            withContext(Dispatchers.Main) {
+                                adapter.notifyDataSetChanged()
+                            }
+                        }
+                    } else {
+                        showError()
+                    }
+                }
+            } catch (e: Exception) {
+                activity?.runOnUiThread {
+                    Toast.makeText(requireContext(), "Excepción: ${e.message}", Toast.LENGTH_LONG)
+                        .show()
+                    Log.e("API Error", "Error: ${e.message}")
                 }
             }
         }
