@@ -46,7 +46,6 @@ class ExploreFragment : Fragment() {
         binding.recyclerFeedExplore.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerFeedExplore.adapter = adapter
 
-        // Configurar el SearchView
         binding.svExplore.setOnQueryTextListener(object :
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -59,34 +58,21 @@ class ExploreFragment : Fragment() {
                 return true
             }
         })
-
-//        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerFeedExplore)
-//        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-//
-//        recyclerView.adapter = feedExploreAdapter(feedExploreProvider.feedExploreList) { item ->
-//            findNavController().navigate(
-//                ExploreFragmentDirections.actionExploreFragmentToPublicationDetailActivity(
-//                    item
-//                )
-//            )
-//        }
     }
 
     private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder().baseUrl("url/")
+        return Retrofit.Builder().baseUrl("baseurl/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    private fun searchByTheme(query: String) {
+    private fun ShowFeed(query: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(APIService::class.java).getFeedByTheme("$query/images")
+            val call = getRetrofit().create(APIService::class.java).getFeed()
             val feed = call.body()
             activity?.runOnUiThread() {
                 if (call.isSuccessful) {
-                    val publications = feed
-                    feedExploreProvider.feedExploreList
-
+                    feed?.User.toString()
                 } else {
                     showError()
                 }
@@ -95,6 +81,6 @@ class ExploreFragment : Fragment() {
     }
 
     private fun showError() {
-        Toast.makeText(requireContext(), "Error ", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
     }
 }
