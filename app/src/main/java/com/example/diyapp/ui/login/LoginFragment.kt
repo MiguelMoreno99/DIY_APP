@@ -48,7 +48,7 @@ class LoginFragment : Fragment() {
 
     private fun validateLogin(): Boolean {
         val user = User(
-            email = "john@example.com",
+            email = "Pedro@example.com",
             name = "Miguel",
             lastname = "Moreno",
             password = "12345",

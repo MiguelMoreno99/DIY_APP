@@ -11,10 +11,6 @@ import com.example.diyapp.R
 import com.example.diyapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    companion object {
-        var instance: MainActivity? = null
-    }
-
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +32,10 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavView.setupWithNavController(navController)
         binding.bottomNavView.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.exploreFragment -> navController.navigate(R.id.exploreFragment)
+                R.id.exploreFragment -> {
+                    navController.navigate(R.id.exploreFragment)
+                }
+
                 R.id.newPublicationFragment -> {
                     if (isUserLoggedIn()) {
                         navController.navigate(R.id.newPublicationFragment)
@@ -45,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this, "You need to Login First!", Toast.LENGTH_SHORT).show()
                     }
                 }
+
                 R.id.myPublicationsFragment -> {
                     if (isUserLoggedIn()) {
                         navController.navigate(R.id.myPublicationsFragment)
@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this, "You need to Login First!", Toast.LENGTH_SHORT).show()
                     }
                 }
+
                 R.id.favoritesFragment -> {
                     if (isUserLoggedIn()) {
                         navController.navigate(R.id.favoritesFragment)
@@ -61,6 +62,7 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this, "You need to Login First!", Toast.LENGTH_SHORT).show()
                     }
                 }
+
                 R.id.loginFragment -> {
                     if (isUserLoggedIn()) {
                         navController.navigate(R.id.manageAccountsFragment)

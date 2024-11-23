@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
 
 class feedFavoritesAdapter(
-    private val feedFavoritesList: List<feedFavorites>,
+    private var feedFavoritesList: List<feedFavorites>,
     private val onClick: (feedFavorites) -> Unit
 ) :
     RecyclerView.Adapter<feedFavoritesAdapter.feedFavoritesViewHolder>() {
@@ -50,6 +50,13 @@ class feedFavoritesAdapter(
                 false
             )
         )
+    }
+
+    fun updateData(newData: List<feedFavorites>) {
+        filteredList.clear()
+        filteredList.addAll(newData)
+        feedFavoritesList = filteredList
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {

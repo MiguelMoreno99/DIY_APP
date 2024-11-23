@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class feedExplore(
-    @SerializedName("id_publicacion") val idPublication: Int, //EL SERIALIZED NAME DEBE SER EXACTAMENTE IGUAL AL DE LA API
+    @SerializedName("id_publicacion") val idPublication: Int,
     @SerializedName("id_usuarios") val User: String,
     @SerializedName("titulo") val title: String,
     @SerializedName("nombre_tema") val Theme: String,

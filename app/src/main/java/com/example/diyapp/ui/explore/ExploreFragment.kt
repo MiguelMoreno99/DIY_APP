@@ -38,8 +38,6 @@ class ExploreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ShowFeed()
-
         adapter =
             feedExploreAdapter(feedExploreProvider.feedExploreList) { item ->
                 findNavController().navigate(
@@ -63,7 +61,9 @@ class ExploreFragment : Fragment() {
                 return true
             }
         })
+        ShowFeed()
     }
+
     private fun getRetrofit(): Retrofit {
         // Configuración del interceptor de logging
         val logging = HttpLoggingInterceptor()
@@ -77,54 +77,40 @@ class ExploreFragment : Fragment() {
 
         // Crea y retorna el objeto Retrofit con el cliente configurado
         return Retrofit.Builder()
-            .baseUrl("http://myprojectapi.com.preview.services/") // Cambia la URL según sea necesario http://192.168.100.18/
-            .client(client)  // Usar el cliente con el interceptor
+            .baseUrl("http://myprojectapi.com.preview.services/") // http://192.168.100.18/
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
-    private fun ShowFeed() {
+    fun ShowFeed() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val call = getRetrofit().create(APIService::class.java).getFeedExplore()
 
-                // Ver la respuesta del servidor como String
-                val responseBody = call.body() // O simplemente body() si es un JSON mapeable
+                val responseBody = call.body()
                 Log.d("API Response", "Server Response: $responseBody")
 
-                // Deserializa a la clase
                 val feed = call.body()
 
                 withContext(Dispatchers.Main) {
-                    if (call.isSuccessful) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Feed cargado correctamente",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        // Procesa la respuesta aquí
-                        if (feed != null) {
-                            feedExploreProvider.feedExploreList = feed
-
-                            // Notifica al adaptador en el hilo principal
-                            withContext(Dispatchers.Main) {
-                                adapter.notifyDataSetChanged()
-                            }
+                    if (call.isSuccessful && feed != null) {
+                        if (feed.isNotEmpty()){
+                            adapter.updateData(feed)
+                        }else{
+                            Toast.makeText(requireContext(), "There is no publications", Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        showError()
+                        Toast.makeText(requireContext(), "Unable to load data", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
-                activity?.runOnUiThread {
+                withContext(Dispatchers.Main) {
                     Toast.makeText(requireContext(), "Excepción: ${e.message}", Toast.LENGTH_LONG)
                         .show()
-                    Log.e("API Error", "Error: ${e.message}")
                 }
+                Log.e("API Error", "Error: ${e.message}")
             }
         }
-    }
-    private fun showError() {
-        Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
     }
 }

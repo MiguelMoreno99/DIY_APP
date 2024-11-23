@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
 
 class feedCreationsAdapter(
-    private val feedCreationsList: List<feedCreations>,
+    private var feedCreationsList: List<feedCreations>,
     private val onClick: (feedCreations) -> Unit
 ) :
     RecyclerView.Adapter<feedCreationsAdapter.feedCreationsViewHolder>() {
@@ -50,6 +50,13 @@ class feedCreationsAdapter(
                 false
             )
         )
+    }
+
+    fun updateData(newData: List<feedCreations>) {
+        filteredList.clear()
+        filteredList.addAll(newData)
+        feedCreationsList = filteredList
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
