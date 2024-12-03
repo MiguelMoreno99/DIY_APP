@@ -1,5 +1,6 @@
 package com.example.diyapp.ui.newpublication
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -43,6 +44,7 @@ class NewPublicationFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -116,7 +118,7 @@ class NewPublicationFragment : Fragment() {
         val title = etTitle.text.toString()
         val description = etDescription.text.toString()
         val instructions = etInstructions.text.toString()
-        if (title == "" || description == "" || instructions == "" || ivImage.drawable == null || recyclerViewAdapter == null || recyclerViewAdapter.itemCount == 0){
+        if (title == "" || description == "" || instructions == "" || ivImage.drawable == null || recyclerViewAdapter.itemCount == 0){
             Toast.makeText(requireContext(), "Fill all the fields First!", Toast.LENGTH_SHORT).show()
         }else{
             Toast.makeText(requireContext(), "Publication Created", Toast.LENGTH_SHORT).show()

@@ -28,8 +28,7 @@ class ExploreFragment : Fragment() {
     private lateinit var adapter: FeedExploreAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentExploreBinding.inflate(layoutInflater, container, false)
         return binding.root
@@ -38,14 +37,13 @@ class ExploreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter =
-            FeedExploreAdapter(FeedExploreProvider.feedExploreList) { item ->
-                findNavController().navigate(
-                    ExploreFragmentDirections.actionExploreFragmentToPublicationDetailActivity(
-                        item
-                    )
+        adapter = FeedExploreAdapter(FeedExploreProvider.feedExploreList) { item ->
+            findNavController().navigate(
+                ExploreFragmentDirections.actionExploreFragmentToPublicationDetailActivity(
+                    item
                 )
-            }
+            )
+        }
         binding.recyclerFeedExplore.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerFeedExplore.adapter = adapter
 
@@ -61,29 +59,24 @@ class ExploreFragment : Fragment() {
                 return true
             }
         })
-        ShowFeed()
+        showFeed()
     }
 
     private fun getRetrofit(): Retrofit {
         // Configuración del interceptor de logging
         val logging = HttpLoggingInterceptor()
-        logging.level =
-            HttpLoggingInterceptor.Level.BODY
+        logging.level = HttpLoggingInterceptor.Level.BODY
 
         // Configuración del OkHttpClient con el interceptor
-        val client = OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .build()
+        val client = OkHttpClient.Builder().addInterceptor(logging).build()
 
         // Crea y retorna el objeto Retrofit con el cliente configurado
         return Retrofit.Builder()
             .baseUrl("http://myprojectapi.com.preview.services/") // http://192.168.100.18/
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+            .client(client).addConverterFactory(GsonConverterFactory.create()).build()
     }
 
-    fun ShowFeed() {
+    private fun showFeed() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val call = getRetrofit().create(APIService::class.java).getFeedExplore()
@@ -95,13 +88,16 @@ class ExploreFragment : Fragment() {
 
                 withContext(Dispatchers.Main) {
                     if (call.isSuccessful && feed != null) {
-                        if (feed.isNotEmpty()){
+                        if (feed.isNotEmpty()) {
                             adapter.updateData(feed)
-                        }else{
-                            Toast.makeText(requireContext(), "There is no publications", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(
+                                requireContext(), "There is no publications", Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } else {
-                        Toast.makeText(requireContext(), "Unable to load data", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Unable to load data", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             } catch (e: Exception) {

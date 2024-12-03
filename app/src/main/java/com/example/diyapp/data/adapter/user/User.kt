@@ -11,5 +11,4 @@ data class User(
     @SerializedName("apellido") val lastname: String,
     @SerializedName("contra") val password: String,
     @SerializedName("foto_perfil") val userPhoto: String,
-) : Parcelable {
-}
+) : Parcelable

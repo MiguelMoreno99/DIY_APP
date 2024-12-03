@@ -63,7 +63,7 @@ class FavoritesFragment : Fragment() {
                 return true
             }
         })
-        ShowFeed()
+        showFeed()
     }
 
     private fun getRetrofit(): Retrofit {
@@ -85,7 +85,7 @@ class FavoritesFragment : Fragment() {
             .build()
     }
 
-    fun ShowFeed() {
+    private fun showFeed() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val sharedPref =
