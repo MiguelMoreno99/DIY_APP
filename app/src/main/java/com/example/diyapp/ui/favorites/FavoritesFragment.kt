@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.diyapp.data.adapter.explore.FeedExploreProvider
 import com.example.diyapp.data.adapter.favorites.feedFavoritesAdapter
 import com.example.diyapp.data.adapter.favorites.feedFavoritesProvider
 import com.example.diyapp.data.adapter.response.UserEmail
@@ -90,7 +89,7 @@ class FavoritesFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val sharedPref =
-                requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+                    requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
                 val mail = sharedPref.getString("email", "")!!
                 val user = UserEmail(mail)
                 val call = getRetrofit().create(APIService::class.java).getFeedFavorites(user)
@@ -102,13 +101,18 @@ class FavoritesFragment : Fragment() {
 
                 withContext(Dispatchers.Main) {
                     if (call.isSuccessful && feed != null) {
-                        if (feed.isNotEmpty()){
+                        if (feed.isNotEmpty()) {
                             adapter.updateData(feed)
-                        }else{
-                            Toast.makeText(requireContext(), "You not have favorites", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "You not have favorites",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } else {
-                        Toast.makeText(requireContext(), "Unable to load data", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Unable to load data", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             } catch (e: Exception) {

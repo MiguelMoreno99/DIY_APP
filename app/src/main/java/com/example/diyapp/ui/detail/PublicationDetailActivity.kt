@@ -10,13 +10,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
 import com.example.diyapp.data.adapter.explore.InstructionsAdapter
 import com.example.diyapp.databinding.ActivityPublicationDetailBinding
-import com.example.diyapp.ui.explore.MainActivity
 
 class PublicationDetailActivity : AppCompatActivity() {
 
@@ -59,15 +57,15 @@ class PublicationDetailActivity : AppCompatActivity() {
             LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvInstructionsPhotos.adapter = InstructionsAdapter(item.photoProcess)
 
-        btnAddFavorite.setOnClickListener{
-            if (isUserLoggedIn()){
+        btnAddFavorite.setOnClickListener {
+            if (isUserLoggedIn()) {
                 Toast.makeText(this, "Added to Favorites!", Toast.LENGTH_SHORT).show()
-            }
-            else{
+            } else {
                 Toast.makeText(this, "You need to Login First!", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
     private fun isUserLoggedIn(): Boolean {
         val sharedPref = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
         return sharedPref.getBoolean("isLoggedIn", false)
