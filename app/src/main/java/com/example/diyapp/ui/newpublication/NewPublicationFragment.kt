@@ -18,7 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
-import com.example.diyapp.data.adapter.create.MultipleImagesAdapterAdapter
+import com.example.diyapp.data.adapter.create.MultipleImagesAdapter
 import com.example.diyapp.databinding.FragmentNewPublicationBinding
 
 class NewPublicationFragment : Fragment() {
@@ -26,7 +26,7 @@ class NewPublicationFragment : Fragment() {
     private var _binding: FragmentNewPublicationBinding? = null
     private val binding get() = _binding!!
     private lateinit var imageUris: MutableList<Uri>
-    private lateinit var recyclerViewAdapter: MultipleImagesAdapterAdapter
+    private lateinit var recyclerViewAdapter: MultipleImagesAdapter
     private lateinit var btnImage: Button
     private lateinit var btnImages: Button
     private lateinit var btnPost: Button
@@ -77,7 +77,7 @@ class NewPublicationFragment : Fragment() {
         etInstructions = view.findViewById(R.id.etInstructions)
 
         imageUris = mutableListOf()
-        recyclerViewAdapter = MultipleImagesAdapterAdapter(imageUris)
+        recyclerViewAdapter = MultipleImagesAdapter(imageUris)
 
         val recyclerView: RecyclerView = view.findViewById(R.id.recyclerViewInstructionPhotos)
         recyclerView.adapter = recyclerViewAdapter

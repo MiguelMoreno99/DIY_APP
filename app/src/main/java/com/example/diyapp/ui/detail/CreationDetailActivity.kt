@@ -18,7 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
-import com.example.diyapp.data.adapter.create.MultipleImagesAdapterAdapter
+import com.example.diyapp.data.adapter.create.MultipleImagesAdapter
 import com.example.diyapp.data.adapter.explore.InstructionsAdapter
 import com.example.diyapp.databinding.ActivityCreationDetailBinding
 
@@ -33,7 +33,7 @@ class CreationDetailActivity : AppCompatActivity() {
     private lateinit var etInstructions: EditText
     private lateinit var args: CreationDetailActivityArgs
     private lateinit var imageUris: MutableList<Uri>
-    private lateinit var recyclerViewAdapter: MultipleImagesAdapterAdapter
+    private lateinit var recyclerViewAdapter: MultipleImagesAdapter
     private lateinit var btnImage: Button
     private lateinit var btnImages: Button
     private lateinit var btnEdit: Button
@@ -93,7 +93,7 @@ class CreationDetailActivity : AppCompatActivity() {
         rvInstructionsPhotos.adapter = InstructionsAdapter(item.photoProcess)
 
         imageUris = mutableListOf()
-        recyclerViewAdapter = MultipleImagesAdapterAdapter(imageUris)
+        recyclerViewAdapter = MultipleImagesAdapter(imageUris)
 
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->

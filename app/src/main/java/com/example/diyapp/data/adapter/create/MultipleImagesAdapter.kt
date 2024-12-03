@@ -8,10 +8,10 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
 
-class MultipleImagesAdapterAdapter(
+class MultipleImagesAdapter(
     private val imageUris: MutableList<Uri>,
 ) :
-    RecyclerView.Adapter<MultipleImagesAdapterAdapter.ImageViewHolder>() {
+    RecyclerView.Adapter<MultipleImagesAdapter.ImageViewHolder>() {
 
     class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageView)
@@ -22,9 +22,7 @@ class MultipleImagesAdapterAdapter(
         return ImageViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return imageUris.size
-    }
+    override fun getItemCount() = imageUris.size
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val item = imageUris[position]
