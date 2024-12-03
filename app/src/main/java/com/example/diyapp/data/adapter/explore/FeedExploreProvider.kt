@@ -1,7 +1,7 @@
 package com.example.diyapp.data.adapter.explore
 
-class feedExploreProvider {
+class FeedExploreProvider {
     companion object {
-        var feedExploreList: List<feedExplore> = listOf()
+        var feedExploreList: List<FeedExplore> = listOf()
     }
 }

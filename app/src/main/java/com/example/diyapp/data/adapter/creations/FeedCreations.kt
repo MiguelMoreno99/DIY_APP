@@ -17,5 +17,4 @@ data class FeedCreations(
     @SerializedName("fecha_creacion") val dateCreation: String,
     @SerializedName("instrucciones") val instructions: String,
     @SerializedName("foto_proceso") val photoProcess: List<String>
-) : Parcelable {
-}
+) : Parcelable

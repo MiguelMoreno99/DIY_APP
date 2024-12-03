@@ -1,7 +1,7 @@
 package com.example.diyapp.domain
 
 import com.example.diyapp.data.adapter.creations.FeedCreations
-import com.example.diyapp.data.adapter.explore.feedExplore
+import com.example.diyapp.data.adapter.explore.FeedExplore
 import com.example.diyapp.data.adapter.favorites.feedFavorites
 import com.example.diyapp.data.adapter.response.IdResponse
 import com.example.diyapp.data.adapter.response.ServerResponse
@@ -16,7 +16,7 @@ import retrofit2.http.POST
 interface APIService {
 
     @GET("ProyectoSistemasMoviles/index.php/publicacion/list/")
-    suspend fun getFeedExplore(): Response<List<feedExplore>>
+    suspend fun getFeedExplore(): Response<List<FeedExplore>>
 
 
     @POST("ProyectoSistemasMoviles/index.php/publicacion/listPorUsuario")

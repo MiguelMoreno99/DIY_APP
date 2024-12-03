@@ -53,7 +53,7 @@
         tools:layout="@layout/activity_publication_detail">
         <argument
             android:name="feedPublicationItem"
-            app:argType="com.example.diyapp.data.adapter.explore.feedExplore" />
+            app:argType="com.example.diyapp.data.adapter.explore.FeedExplore" />
     </activity>
     <activity
         android:id="@+id/favoriteDetailActivity"

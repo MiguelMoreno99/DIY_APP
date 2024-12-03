@@ -49,7 +49,7 @@ class PublicationDetailActivity : AppCompatActivity() {
         args = PublicationDetailActivityArgs.fromBundle(intent.extras!!)
         val item = args.feedPublicationItem
         tvTitle.text = item.title
-        tvCategory.text = item.Theme
+        tvCategory.text = item.theme
         val photoMainBytes = Base64.decode(item.photoMain, Base64.DEFAULT)
         val photoMainBitmap = BitmapFactory.decodeByteArray(photoMainBytes, 0, photoMainBytes.size)
         ivMainPhoto.setImageBitmap(photoMainBitmap)

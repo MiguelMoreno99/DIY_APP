@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.diyapp.data.adapter.explore.feedExploreProvider
+import com.example.diyapp.data.adapter.explore.FeedExploreProvider
 import com.example.diyapp.data.adapter.favorites.feedFavoritesAdapter
 import com.example.diyapp.data.adapter.favorites.feedFavoritesProvider
 import com.example.diyapp.data.adapter.response.UserEmail

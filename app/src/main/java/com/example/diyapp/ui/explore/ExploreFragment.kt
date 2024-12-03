@@ -9,8 +9,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.diyapp.data.adapter.explore.feedExploreAdapter
-import com.example.diyapp.data.adapter.explore.feedExploreProvider
+import com.example.diyapp.data.adapter.explore.FeedExploreAdapter
+import com.example.diyapp.data.adapter.explore.FeedExploreProvider
 import com.example.diyapp.databinding.FragmentExploreBinding
 import com.example.diyapp.domain.APIService
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class ExploreFragment : Fragment() {
     private var _binding: FragmentExploreBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter: feedExploreAdapter
+    private lateinit var adapter: FeedExploreAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +39,7 @@ class ExploreFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter =
-            feedExploreAdapter(feedExploreProvider.feedExploreList) { item ->
+            FeedExploreAdapter(FeedExploreProvider.feedExploreList) { item ->
                 findNavController().navigate(
                     ExploreFragmentDirections.actionExploreFragmentToPublicationDetailActivity(
                         item
