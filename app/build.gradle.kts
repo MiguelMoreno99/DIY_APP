@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.devtools.ksp") version "1.9.0-1.0.13"
     id("androidx.navigation.safeargs.kotlin")
     id("kotlin-parcelize")
 }
@@ -56,8 +57,9 @@ dependencies {
     implementation(libs.navigation.ui)
 
     //Room in libs.versions.toml
-    //implementation(libs.room.compiler)
-    //implementation(libs.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     //Retrofit in libs.versions.toml
     implementation(libs.retrofit)
