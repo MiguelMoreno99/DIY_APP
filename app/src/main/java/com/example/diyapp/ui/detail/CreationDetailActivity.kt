@@ -1,5 +1,6 @@
 package com.example.diyapp.ui.detail
 
+import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
@@ -14,7 +15,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
@@ -46,6 +46,7 @@ class CreationDetailActivity : AppCompatActivity() {
         loadPublicationInfo()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun loadPublicationInfo() {
         etTitle = findViewById(R.id.editTextTitle)
         val options = listOf(
@@ -81,7 +82,7 @@ class CreationDetailActivity : AppCompatActivity() {
         spCategory.adapter = adapter
 
         etTitle.setText(item.title)
-        setSpinnerSelection(spCategory, item.Theme)
+        setSpinnerSelection(spCategory, item.theme)
 
         val photoMainBytes = Base64.decode(item.photoMain, Base64.DEFAULT)
         val photoMainBitmap = BitmapFactory.decodeByteArray(photoMainBytes, 0, photoMainBytes.size)
@@ -145,9 +146,9 @@ class CreationDetailActivity : AppCompatActivity() {
         val title = etTitle.text.toString()
         val description = etDescription.text.toString()
         val instructions = etInstructions.text.toString()
-        if (title == "" || description == "" || instructions == ""){
+        if (title == "" || description == "" || instructions == "") {
             Toast.makeText(this, "Fill all the fields First!", Toast.LENGTH_SHORT).show()
-        }else{
+        } else {
             Toast.makeText(this, "Publication Edited!", Toast.LENGTH_SHORT).show()
             finish() // asegúrate de que se llame después de que se complete la tarea asíncrona.
         }

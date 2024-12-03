@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.diyapp.data.adapter.creations.feedCreationsAdapter
+import com.example.diyapp.data.adapter.creations.FeedCreationsAdapter
 import com.example.diyapp.data.adapter.creations.feedCreationsProvider
 import com.example.diyapp.data.adapter.response.UserEmail
 import com.example.diyapp.databinding.FragmentMyPublicationsBinding
@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MyPublicationsFragment : Fragment() {
     private var _binding: FragmentMyPublicationsBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter: feedCreationsAdapter
+    private lateinit var adapter: FeedCreationsAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,7 +40,7 @@ class MyPublicationsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter =
-            feedCreationsAdapter(feedCreationsProvider.feedCreationsList) { item ->
+            FeedCreationsAdapter(feedCreationsProvider.feedCreationsList) { item ->
                 findNavController().navigate(
                     MyPublicationsFragmentDirections.actionMyPublicationsFragmentToCreationDetailActivity(
                         item

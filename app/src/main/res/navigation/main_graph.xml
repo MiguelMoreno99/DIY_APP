@@ -71,7 +71,7 @@
         tools:layout="@layout/activity_creation_detail">
         <argument
             android:name="feedCreationItem"
-            app:argType="com.example.diyapp.data.adapter.creations.feedCreations" />
+            app:argType="com.example.diyapp.data.adapter.creations.FeedCreations" />
     </activity>
     <activity
         android:id="@+id/registerAccountActivity"

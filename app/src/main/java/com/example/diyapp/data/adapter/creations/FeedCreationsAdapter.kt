@@ -1,5 +1,6 @@
 package com.example.diyapp.data.adapter.creations
 
+import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.view.LayoutInflater
@@ -10,28 +11,28 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
 
-class feedCreationsAdapter(
-    private var feedCreationsList: List<feedCreations>,
-    private val onClick: (feedCreations) -> Unit
+class FeedCreationsAdapter(
+    private var feedCreationsList: List<FeedCreations>,
+    private val onClick: (FeedCreations) -> Unit
 ) :
-    RecyclerView.Adapter<feedCreationsAdapter.feedCreationsViewHolder>() {
+    RecyclerView.Adapter<FeedCreationsAdapter.FeedCreationsViewHolder>() {
 
     private var filteredList = feedCreationsList.toMutableList()
 
-    inner class feedCreationsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class FeedCreationsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val UserName: TextView = view.findViewById(R.id.tvUserName)
-        val Category: TextView = view.findViewById(R.id.tvCategory)
-        val Title: TextView = view.findViewById(R.id.tvTitle)
-        val LikesCountNumber: TextView = view.findViewById(R.id.tvLikesCountNumber)
-        val CreationDate: TextView = view.findViewById(R.id.tvCreationDate)
-        val photoMain: ImageView = view.findViewById(R.id.ivMainImage)
-        fun render(feedCreationsModel: feedCreations) {
-            UserName.text = feedCreationsModel.User
-            Category.text = feedCreationsModel.Theme
-            Title.text = feedCreationsModel.title
-            LikesCountNumber.text = feedCreationsModel.numLikes.toString()
-            CreationDate.text = feedCreationsModel.dateCreation
+        private val userName: TextView = view.findViewById(R.id.tvUserName)
+        private val category: TextView = view.findViewById(R.id.tvCategory)
+        private val title: TextView = view.findViewById(R.id.tvTitle)
+        private val likesCountNumber: TextView = view.findViewById(R.id.tvLikesCountNumber)
+        private val creationDate: TextView = view.findViewById(R.id.tvCreationDate)
+        private val photoMain: ImageView = view.findViewById(R.id.ivMainImage)
+        fun render(feedCreationsModel: FeedCreations) {
+            userName.text = feedCreationsModel.user
+            category.text = feedCreationsModel.theme
+            title.text = feedCreationsModel.title
+            likesCountNumber.text = feedCreationsModel.numLikes.toString()
+            creationDate.text = feedCreationsModel.dateCreation
 
             val photoMainBytes = Base64.decode(feedCreationsModel.photoMain, Base64.DEFAULT)
             val photoMainBitmap =
@@ -41,9 +42,9 @@ class feedCreationsAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): feedCreationsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedCreationsViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return feedCreationsViewHolder(
+        return FeedCreationsViewHolder(
             layoutInflater.inflate(
                 R.layout.item_feedcreations,
                 parent,
@@ -52,7 +53,8 @@ class feedCreationsAdapter(
         )
     }
 
-    fun updateData(newData: List<feedCreations>) {
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateData(newData: List<FeedCreations>) {
         filteredList.clear()
         filteredList.addAll(newData)
         feedCreationsList = filteredList
@@ -63,17 +65,18 @@ class feedCreationsAdapter(
         return filteredList.size
     }
 
-    override fun onBindViewHolder(holder: feedCreationsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FeedCreationsViewHolder, position: Int) {
         val item = filteredList[position]
         holder.render(item)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun filter(query: String) {
         filteredList = if (query.isEmpty()) {
             feedCreationsList.toMutableList()
         } else {
             feedCreationsList.filter {
-                it.Theme.contains(query, ignoreCase = true)
+                it.theme.contains(query, ignoreCase = true)
             }.toMutableList()
         }
         notifyDataSetChanged()

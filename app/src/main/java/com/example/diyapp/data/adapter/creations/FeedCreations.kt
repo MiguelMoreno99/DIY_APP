@@ -5,11 +5,11 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class feedCreations(
+data class FeedCreations(
     @SerializedName("id_publicacion") val idPublication: Int, //EL SERIALIZED NAME DEBE SER EXACTAMENTE IGUAL AL DE LA API
-    @SerializedName("id_usuarios") val User: String,
+    @SerializedName("id_usuarios") val user: String,
     @SerializedName("titulo") val title: String,
-    @SerializedName("nombre_tema") val Theme: String,
+    @SerializedName("nombre_tema") val theme: String,
     @SerializedName("foto_portada") val photoMain: String,
     @SerializedName("descripcion") val description: String,
     @SerializedName("num_likes") val numLikes: Int,

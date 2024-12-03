@@ -1,6 +1,6 @@
 package com.example.diyapp.domain
 
-import com.example.diyapp.data.adapter.creations.feedCreations
+import com.example.diyapp.data.adapter.creations.FeedCreations
 import com.example.diyapp.data.adapter.explore.feedExplore
 import com.example.diyapp.data.adapter.favorites.feedFavorites
 import com.example.diyapp.data.adapter.response.IdResponse
@@ -20,7 +20,7 @@ interface APIService {
 
 
     @POST("ProyectoSistemasMoviles/index.php/publicacion/listPorUsuario")
-    suspend fun getFeedCreations(@Body userEmail: UserEmail): Response<List<feedCreations>> // mandar correo
+    suspend fun getFeedCreations(@Body userEmail: UserEmail): Response<List<FeedCreations>> // mandar correo
     @POST("ProyectoSistemasMoviles/index.php/favorito/list")
     suspend fun getFeedFavorites(@Body userEmail: UserEmail): Response<List<feedFavorites>> // mandar correo
     @POST("ProyectoSistemasMoviles/index.php/user/listUser")
@@ -28,9 +28,9 @@ interface APIService {
 
 
     @POST("ProyectoSistemasMoviles/index.php/")
-    suspend fun editCreation(@Body creation: feedCreations): Response<ServerResponse> //mandar toda la publicacion
+    suspend fun editCreation(@Body creation: FeedCreations): Response<ServerResponse> //mandar toda la publicacion
     @POST("ProyectoSistemasMoviles/index.php/")
-    suspend fun createPublication(@Body creation: feedCreations): Response<ServerResponse> //mandar toda la publicacion
+    suspend fun createPublication(@Body creation: FeedCreations): Response<ServerResponse> //mandar toda la publicacion
     @POST("ProyectoSistemasMoviles/index.php/user/modify")
     suspend fun modifyUser(@Body user: User): Response<User> // mandartodo el usuario
     @POST("ProyectoSistemasMoviles/index.php/user/insert")
