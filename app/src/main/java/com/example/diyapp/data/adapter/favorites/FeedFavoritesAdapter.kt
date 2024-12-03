@@ -1,5 +1,6 @@
 package com.example.diyapp.data.adapter.favorites
 
+import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.view.LayoutInflater
@@ -10,28 +11,28 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
 
-class feedFavoritesAdapter(
-    private var feedFavoritesList: List<feedFavorites>,
-    private val onClick: (feedFavorites) -> Unit
+class FeedFavoritesAdapter(
+    private var feedFavoritesList: List<FeedFavorites>,
+    private val onClick: (FeedFavorites) -> Unit
 ) :
-    RecyclerView.Adapter<feedFavoritesAdapter.feedFavoritesViewHolder>() {
+    RecyclerView.Adapter<FeedFavoritesAdapter.FeedFavoritesViewHolder>() {
 
     private var filteredList = feedFavoritesList.toMutableList()
 
-    inner class feedFavoritesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    inner class FeedFavoritesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val UserName: TextView = view.findViewById(R.id.tvUserName)
-        val Category: TextView = view.findViewById(R.id.tvCategory)
-        val Title: TextView = view.findViewById(R.id.tvTitle)
-        val LikesCountNumber: TextView = view.findViewById(R.id.tvLikesCountNumber)
-        val CreationDate: TextView = view.findViewById(R.id.tvCreationDate)
-        val photoMain: ImageView = view.findViewById(R.id.ivMainImage)
-        fun render(feedFavoritesModel: feedFavorites) {
-            UserName.text = feedFavoritesModel.User
-            Category.text = feedFavoritesModel.Theme
-            Title.text = feedFavoritesModel.title
-            LikesCountNumber.text = feedFavoritesModel.numLikes.toString()
-            CreationDate.text = feedFavoritesModel.dateCreation
+        private val userName: TextView = view.findViewById(R.id.tvUserName)
+        private val category: TextView = view.findViewById(R.id.tvCategory)
+        private val title: TextView = view.findViewById(R.id.tvTitle)
+        private val likesCountNumber: TextView = view.findViewById(R.id.tvLikesCountNumber)
+        private val creationDate: TextView = view.findViewById(R.id.tvCreationDate)
+        private val photoMain: ImageView = view.findViewById(R.id.ivMainImage)
+        fun render(feedFavoritesModel: FeedFavorites) {
+            userName.text = feedFavoritesModel.user
+            category.text = feedFavoritesModel.theme
+            title.text = feedFavoritesModel.title
+            likesCountNumber.text = feedFavoritesModel.numLikes.toString()
+            creationDate.text = feedFavoritesModel.dateCreation
 
             val photoMainBytes = Base64.decode(feedFavoritesModel.photoMain, Base64.DEFAULT)
             val photoMainBitmap =
@@ -41,9 +42,9 @@ class feedFavoritesAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): feedFavoritesViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedFavoritesViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return feedFavoritesViewHolder(
+        return FeedFavoritesViewHolder(
             layoutInflater.inflate(
                 R.layout.item_feedfavorites,
                 parent,
@@ -52,7 +53,8 @@ class feedFavoritesAdapter(
         )
     }
 
-    fun updateData(newData: List<feedFavorites>) {
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateData(newData: List<FeedFavorites>) {
         filteredList.clear()
         filteredList.addAll(newData)
         feedFavoritesList = filteredList
@@ -63,17 +65,18 @@ class feedFavoritesAdapter(
         return filteredList.size
     }
 
-    override fun onBindViewHolder(holder: feedFavoritesViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FeedFavoritesViewHolder, position: Int) {
         val item = filteredList[position]
         holder.render(item)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun filter(query: String) {
         filteredList = if (query.isEmpty()) {
             feedFavoritesList.toMutableList()
         } else {
             feedFavoritesList.filter {
-                it.Theme.contains(query, ignoreCase = true)
+                it.theme.contains(query, ignoreCase = true)
             }.toMutableList()
         }
         notifyDataSetChanged()

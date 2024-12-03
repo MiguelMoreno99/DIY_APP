@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.diyapp.data.adapter.favorites.feedFavoritesAdapter
+import com.example.diyapp.data.adapter.favorites.FeedFavoritesAdapter
 import com.example.diyapp.data.adapter.favorites.feedFavoritesProvider
 import com.example.diyapp.data.adapter.response.UserEmail
 import com.example.diyapp.databinding.FragmentFavoritesBinding
@@ -27,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter: feedFavoritesAdapter
+    private lateinit var adapter: FeedFavoritesAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,7 +40,7 @@ class FavoritesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter =
-            feedFavoritesAdapter(feedFavoritesProvider.feedFavoritesList) { item ->
+            FeedFavoritesAdapter(feedFavoritesProvider.feedFavoritesList) { item ->
                 findNavController().navigate(
                     FavoritesFragmentDirections.actionFavoritesFragmentToFavoriteDetailActivity(
                         item

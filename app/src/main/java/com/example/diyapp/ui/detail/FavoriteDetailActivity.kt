@@ -52,7 +52,7 @@ class FavoriteDetailActivity : AppCompatActivity() {
         args = FavoriteDetailActivityArgs.fromBundle(intent.extras!!)
         val item = args.feedFavoriteItem
         tvTitle.text = item.title
-        tvCategory.text = item.Theme
+        tvCategory.text = item.theme
 
         val photoMainBytes = Base64.decode(item.photoMain, Base64.DEFAULT)
         val photoMainBitmap = BitmapFactory.decodeByteArray(photoMainBytes, 0, photoMainBytes.size)

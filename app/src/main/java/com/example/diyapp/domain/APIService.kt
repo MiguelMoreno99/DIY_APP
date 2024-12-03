@@ -2,7 +2,7 @@ package com.example.diyapp.domain
 
 import com.example.diyapp.data.adapter.creations.FeedCreations
 import com.example.diyapp.data.adapter.explore.FeedExplore
-import com.example.diyapp.data.adapter.favorites.feedFavorites
+import com.example.diyapp.data.adapter.favorites.FeedFavorites
 import com.example.diyapp.data.adapter.response.IdResponse
 import com.example.diyapp.data.adapter.response.ServerResponse
 import com.example.diyapp.data.adapter.response.UserCredentials
@@ -22,7 +22,7 @@ interface APIService {
     @POST("ProyectoSistemasMoviles/index.php/publicacion/listPorUsuario")
     suspend fun getFeedCreations(@Body userEmail: UserEmail): Response<List<FeedCreations>> // mandar correo
     @POST("ProyectoSistemasMoviles/index.php/favorito/list")
-    suspend fun getFeedFavorites(@Body userEmail: UserEmail): Response<List<feedFavorites>> // mandar correo
+    suspend fun getFeedFavorites(@Body userEmail: UserEmail): Response<List<FeedFavorites>> // mandar correo
     @POST("ProyectoSistemasMoviles/index.php/user/listUser")
     suspend fun fillUser(@Body userEmail: UserEmail): Response<User> // mandar correo
 

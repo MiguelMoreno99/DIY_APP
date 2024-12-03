@@ -62,7 +62,7 @@
         tools:layout="@layout/activity_favorite_detail">
         <argument
             android:name="feedFavoriteItem"
-            app:argType="com.example.diyapp.data.adapter.favorites.feedFavorites" />
+            app:argType="com.example.diyapp.data.adapter.favorites.FeedFavorites" />
     </activity>
     <activity
         android:id="@+id/creationDetailActivity"
