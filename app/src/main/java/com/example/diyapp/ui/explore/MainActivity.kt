@@ -1,6 +1,5 @@
 package com.example.diyapp.ui.explore
 
-import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.diyapp.R
+import com.example.diyapp.data.adapter.user.SessionManager
 import com.example.diyapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -32,69 +32,37 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavView.setupWithNavController(navController)
         binding.bottomNavView.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.exploreFragment -> {
-                    navController.navigate(R.id.exploreFragment)
-                }
+                R.id.exploreFragment -> navController.navigate(R.id.exploreFragment)
+                R.id.newPublicationFragment -> navigateWithLoginCheck(
+                    R.id.newPublicationFragment,
+                    R.id.loginFragment
+                )
 
-                R.id.newPublicationFragment -> {
-                    if (isUserLoggedIn()) {
-                        navController.navigate(R.id.newPublicationFragment)
-                    } else {
-                        navController.navigate(R.id.loginFragment)
-                        Toast.makeText(this, "You need to Login First!", Toast.LENGTH_SHORT).show()
-                    }
-                }
+                R.id.myPublicationsFragment -> navigateWithLoginCheck(
+                    R.id.myPublicationsFragment,
+                    R.id.loginFragment
+                )
 
-                R.id.myPublicationsFragment -> {
-                    if (isUserLoggedIn()) {
-                        navController.navigate(R.id.myPublicationsFragment)
-                    } else {
-                        navController.navigate(R.id.loginFragment)
-                        Toast.makeText(this, "You need to Login First!", Toast.LENGTH_SHORT).show()
-                    }
-                }
+                R.id.favoritesFragment -> navigateWithLoginCheck(
+                    R.id.favoritesFragment,
+                    R.id.loginFragment
+                )
 
-                R.id.favoritesFragment -> {
-                    if (isUserLoggedIn()) {
-                        navController.navigate(R.id.favoritesFragment)
-                    } else {
-                        navController.navigate(R.id.loginFragment)
-                        Toast.makeText(this, "You need to Login First!", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-                R.id.loginFragment -> {
-                    if (isUserLoggedIn()) {
-                        navController.navigate(R.id.manageAccountsFragment)
-                    } else {
-                        navController.navigate(R.id.loginFragment)
-                    }
-                }
+                R.id.loginFragment -> navigateWithLoginCheck(
+                    R.id.manageAccountsFragment,
+                    R.id.loginFragment
+                )
             }
             true
         }
     }
 
-    private fun isUserLoggedIn(): Boolean {
-        val sharedPref = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
-        return sharedPref.getBoolean("isLoggedIn", false)
-    }
-
-    fun setUserLoggedIn(
-        loggedIn: Boolean,
-        email: String,
-        name: String,
-        lastname: String,
-        photo: String
-    ) {
-        val sharedPref = getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putString("email", email)
-            putString("name", name)
-            putString("lastname", lastname)
-            putString("photo", photo)
-            putBoolean("isLoggedIn", loggedIn)
-            apply()
+    private fun navigateWithLoginCheck(destinationIfLoggedIn: Int, destinationIfNotLoggedIn: Int) {
+        if (SessionManager.isUserLoggedIn(this)) {
+            navController.navigate(destinationIfLoggedIn)
+        } else {
+            navController.navigate(destinationIfNotLoggedIn)
+            Toast.makeText(this, getString(R.string.loginFirst), Toast.LENGTH_SHORT).show()
         }
     }
 }
