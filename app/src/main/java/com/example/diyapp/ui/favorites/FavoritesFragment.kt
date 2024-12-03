@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diyapp.data.adapter.favorites.FeedFavoritesAdapter
-import com.example.diyapp.data.adapter.favorites.feedFavoritesProvider
+import com.example.diyapp.data.adapter.favorites.FeedFavoritesProvider
 import com.example.diyapp.data.adapter.response.UserEmail
 import com.example.diyapp.databinding.FragmentFavoritesBinding
 import com.example.diyapp.domain.APIService
@@ -40,7 +40,7 @@ class FavoritesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         adapter =
-            FeedFavoritesAdapter(feedFavoritesProvider.feedFavoritesList) { item ->
+            FeedFavoritesAdapter(FeedFavoritesProvider.feedFavoritesList) { item ->
                 findNavController().navigate(
                     FavoritesFragmentDirections.actionFavoritesFragmentToFavoriteDetailActivity(
                         item

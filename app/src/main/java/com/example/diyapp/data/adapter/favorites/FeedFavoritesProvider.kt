@@ -1,6 +1,6 @@
 package com.example.diyapp.data.adapter.favorites
 
-class feedFavoritesProvider {
+class FeedFavoritesProvider {
     companion object {
         val feedFavoritesList: List<FeedFavorites> = listOf()
     }
