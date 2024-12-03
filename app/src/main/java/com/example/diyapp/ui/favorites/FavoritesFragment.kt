@@ -50,7 +50,6 @@ class FavoritesFragment : Fragment() {
         binding.recyclerFeedFavorites.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerFeedFavorites.adapter = adapter
 
-        // Configurar el SearchView
         binding.svFavorites.setOnQueryTextListener(object :
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -66,25 +65,6 @@ class FavoritesFragment : Fragment() {
         showFeed()
     }
 
-    private fun getRetrofit(): Retrofit {
-        // Configuración del interceptor de logging
-        val logging = HttpLoggingInterceptor()
-        logging.level =
-            HttpLoggingInterceptor.Level.BODY
-
-        // Configuración del OkHttpClient con el interceptor
-        val client = OkHttpClient.Builder()
-            .addInterceptor(logging)
-            .build()
-
-        // Crea y retorna el objeto Retrofit con el cliente configurado
-        return Retrofit.Builder()
-            .baseUrl("http://myprojectapi.com.preview.services/") // http://192.168.100.18/
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
     private fun showFeed() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -92,7 +72,7 @@ class FavoritesFragment : Fragment() {
                     requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
                 val mail = sharedPref.getString("email", "")!!
                 val user = UserEmail(mail)
-                val call = getRetrofit().create(APIService::class.java).getFeedFavorites(user)
+                val call = RetrofitManager.getRetrofit().create(APIService::class.java).getFeedFavorites(user)
 
                 val responseBody = call.body()
                 Log.d("API Response", "Server Response: $responseBody")

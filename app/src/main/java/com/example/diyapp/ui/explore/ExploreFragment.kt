@@ -1,5 +1,6 @@
 package com.example.diyapp.ui.explore
 
+import RetrofitManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,15 +18,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class ExploreFragment : Fragment() {
     private var _binding: FragmentExploreBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: FeedExploreAdapter
+    private val feedExploreList = FeedExploreProvider.feedExploreList
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -37,16 +35,64 @@ class ExploreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = FeedExploreAdapter(FeedExploreProvider.feedExploreList) { item ->
+        setupRecyclerView()
+        setupSearchView()
+        showFeed()
+    }
+
+    private fun showFeed() {
+
+        binding.progressBar.visibility = View.VISIBLE
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val call =
+                    RetrofitManager.getRetrofit().create(APIService::class.java).getFeedExplore()
+
+                val responseBody = call.body()
+                Log.d("API Response", "Server Response: $responseBody")
+
+                withContext(Dispatchers.Main) {
+                    binding.progressBar.visibility = View.GONE
+
+                    if (call.isSuccessful && responseBody != null) {
+                        if (responseBody.isNotEmpty()) {
+                            adapter.updateData(responseBody)
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "There are no publications",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Unable to load data", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), "Exception: ${e.message}", Toast.LENGTH_LONG)
+                        .show()
+                }
+                Log.e("API Error", "Error: ${e.message}")
+            }
+        }
+    }
+
+    private fun setupRecyclerView() {
+        adapter = FeedExploreAdapter(feedExploreList) { item ->
             findNavController().navigate(
-                ExploreFragmentDirections.actionExploreFragmentToPublicationDetailActivity(
-                    item
-                )
+                ExploreFragmentDirections.actionExploreFragmentToPublicationDetailActivity(item)
             )
         }
+
         binding.recyclerFeedExplore.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerFeedExplore.adapter = adapter
+    }
 
+    private fun setupSearchView() {
         binding.svExplore.setOnQueryTextListener(object :
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -59,54 +105,5 @@ class ExploreFragment : Fragment() {
                 return true
             }
         })
-        showFeed()
-    }
-
-    private fun getRetrofit(): Retrofit {
-        // Configuración del interceptor de logging
-        val logging = HttpLoggingInterceptor()
-        logging.level = HttpLoggingInterceptor.Level.BODY
-
-        // Configuración del OkHttpClient con el interceptor
-        val client = OkHttpClient.Builder().addInterceptor(logging).build()
-
-        // Crea y retorna el objeto Retrofit con el cliente configurado
-        return Retrofit.Builder()
-            .baseUrl("http://myprojectapi.com.preview.services/") // http://192.168.100.18/
-            .client(client).addConverterFactory(GsonConverterFactory.create()).build()
-    }
-
-    private fun showFeed() {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val call = getRetrofit().create(APIService::class.java).getFeedExplore()
-
-                val responseBody = call.body()
-                Log.d("API Response", "Server Response: $responseBody")
-
-                val feed = call.body()
-
-                withContext(Dispatchers.Main) {
-                    if (call.isSuccessful && feed != null) {
-                        if (feed.isNotEmpty()) {
-                            adapter.updateData(feed)
-                        } else {
-                            Toast.makeText(
-                                requireContext(), "There is no publications", Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    } else {
-                        Toast.makeText(requireContext(), "Unable to load data", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), "Excepción: ${e.message}", Toast.LENGTH_LONG)
-                        .show()
-                }
-                Log.e("API Error", "Error: ${e.message}")
-            }
-        }
     }
 }
