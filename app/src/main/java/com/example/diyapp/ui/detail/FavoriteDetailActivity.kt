@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diyapp.R
 import com.example.diyapp.data.adapter.explore.InstructionsAdapter
+import com.example.diyapp.data.adapter.user.SessionManager
 import com.example.diyapp.databinding.ActivityFavoriteDetailBinding
 
 class FavoriteDetailActivity : AppCompatActivity() {
@@ -57,6 +58,6 @@ class FavoriteDetailActivity : AppCompatActivity() {
     }
 
     private fun removeFromFavorites() {
-        Toast.makeText(this, getString(R.string.removedFromFavorites), Toast.LENGTH_SHORT).show()
+        SessionManager.showToast(this, R.string.removedFromFavorites)
     }
 }

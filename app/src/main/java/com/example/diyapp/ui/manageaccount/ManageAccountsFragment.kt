@@ -17,7 +17,6 @@ import com.example.diyapp.databinding.FragmentManageAccountsBinding
 
 class ManageAccountsFragment : Fragment() {
     private var _binding: FragmentManageAccountsBinding? = null
-    private val sessionManager = SessionManager
     private val binding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +29,7 @@ class ManageAccountsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sharedPref = sessionManager.getUserInfo(requireContext())
+        val sharedPref = SessionManager.getUserInfo(requireContext())
         val name = sharedPref["name"]
         val lastname = sharedPref["lastname"]
         val profilePicture = sharedPref["photo"]
@@ -38,7 +37,6 @@ class ManageAccountsFragment : Fragment() {
         with(binding) {
             nameEditText.setText(name)
             lastNameEditText.setText(lastname)
-            sessionManager.setUserLoggedIn(requireContext(), false)
             val photoMainBytes = Base64.decode(profilePicture, Base64.DEFAULT)
             val photoMainBitmap =
                 BitmapFactory.decodeByteArray(photoMainBytes, 0, photoMainBytes.size)
@@ -48,7 +46,7 @@ class ManageAccountsFragment : Fragment() {
         binding.logoutButton.setOnClickListener {
             SessionManager.setUserLoggedIn(requireContext(), false)
             findNavController().navigate(R.id.exploreFragment)
-            showToast(R.string.logoutSuccessful)
+            SessionManager.showToast(requireContext(),R.string.logoutSuccessful)
         }
 
         val pickMedia =
@@ -75,22 +73,18 @@ class ManageAccountsFragment : Fragment() {
 
         when {
             name.isBlank() || lastname.isBlank() || password.isBlank() || confirmPassword.isBlank() -> {
-                showToast(R.string.fillFields)
+                SessionManager.showToast(requireContext(),R.string.fillFields)
             }
 
             password != confirmPassword -> {
-                showToast(R.string.verifyPassword)
+                SessionManager.showToast(requireContext(),R.string.verifyPassword)
             }
 
             else -> {
-                showToast(R.string.userUpdated)
+                SessionManager.showToast(requireContext(),R.string.userUpdated)
                 navigateToExploreFragment()
             }
         }
-    }
-
-    private fun showToast(messageResId: Int) {
-        Toast.makeText(requireContext(), getString(messageResId), Toast.LENGTH_SHORT).show()
     }
 
     private fun navigateToExploreFragment() {

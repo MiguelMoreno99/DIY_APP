@@ -6,15 +6,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.diyapp.R
 import com.example.diyapp.data.adapter.explore.FeedExploreAdapter
 import com.example.diyapp.data.adapter.explore.FeedExploreProvider
+import com.example.diyapp.data.adapter.user.SessionManager
 import com.example.diyapp.databinding.FragmentExploreBinding
 import com.example.diyapp.domain.APIService
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -44,10 +45,10 @@ class ExploreFragment : Fragment() {
 
         binding.progressBar.visibility = View.VISIBLE
 
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val call =
-                    RetrofitManager.getRetrofit().create(APIService::class.java).getFeedExplore()
+                    RetrofitManager.getRetroFit().create(APIService::class.java).getFeedExplore()
 
                 val responseBody = call.body()
                 Log.d("API Response", "Server Response: $responseBody")
@@ -59,22 +60,16 @@ class ExploreFragment : Fragment() {
                         if (responseBody.isNotEmpty()) {
                             adapter.updateData(responseBody)
                         } else {
-                            Toast.makeText(
-                                requireContext(),
-                                "There are no publications",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            SessionManager.showToast(requireContext(), R.string.noPublications)
                         }
                     } else {
-                        Toast.makeText(requireContext(), "Unable to load data", Toast.LENGTH_SHORT)
-                            .show()
+                        SessionManager.showToast(requireContext(), R.string.unableToLoadData)
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     binding.progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), "Exception: ${e.message}", Toast.LENGTH_LONG)
-                        .show()
+                    SessionManager.showToast(requireContext(), R.string.error)
                 }
                 Log.e("API Error", "Error: ${e.message}")
             }

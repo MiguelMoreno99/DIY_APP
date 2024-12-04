@@ -1,28 +1,25 @@
 package com.example.diyapp.ui.favorites
 
-import android.content.Context
+import RetrofitManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.diyapp.R
 import com.example.diyapp.data.adapter.favorites.FeedFavoritesAdapter
 import com.example.diyapp.data.adapter.favorites.FeedFavoritesProvider
 import com.example.diyapp.data.adapter.response.UserEmail
+import com.example.diyapp.data.adapter.user.SessionManager
 import com.example.diyapp.databinding.FragmentFavoritesBinding
 import com.example.diyapp.domain.APIService
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class FavoritesFragment : Fragment() {
     private var _binding: FragmentFavoritesBinding? = null
@@ -66,39 +63,36 @@ class FavoritesFragment : Fragment() {
     }
 
     private fun showFeed() {
-        CoroutineScope(Dispatchers.IO).launch {
+
+        binding.progressBar.visibility = View.VISIBLE
+
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val sharedPref =
-                    requireContext().getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
-                val mail = sharedPref.getString("email", "")!!
-                val user = UserEmail(mail)
-                val call = RetrofitManager.getRetrofit().create(APIService::class.java).getFeedFavorites(user)
+                val sharedPref = SessionManager.getUserInfo(requireContext())
+                val email = sharedPref["email"]
+                val user = UserEmail(email!!)
+                val call = RetrofitManager.getRetroFit().create(APIService::class.java)
+                    .getFeedFavorites(user)
 
                 val responseBody = call.body()
                 Log.d("API Response", "Server Response: $responseBody")
 
-                val feed = call.body()
-
                 withContext(Dispatchers.Main) {
-                    if (call.isSuccessful && feed != null) {
-                        if (feed.isNotEmpty()) {
-                            adapter.updateData(feed)
+                    binding.progressBar.visibility = View.GONE
+
+                    if (call.isSuccessful && responseBody != null) {
+                        if (responseBody.isNotEmpty()) {
+                            adapter.updateData(responseBody)
                         } else {
-                            Toast.makeText(
-                                requireContext(),
-                                "You not have favorites",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            SessionManager.showToast(requireContext(), R.string.notHaveFavorites)
                         }
                     } else {
-                        Toast.makeText(requireContext(), "Unable to load data", Toast.LENGTH_SHORT)
-                            .show()
+                        SessionManager.showToast(requireContext(), R.string.unableToLoadData)
                     }
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), "Excepción: ${e.message}", Toast.LENGTH_LONG)
-                        .show()
+                    SessionManager.showToast(requireContext(), R.string.error)
                 }
                 Log.e("API Error", "Error: ${e.message}")
             }

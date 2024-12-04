@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diyapp.R
 import com.example.diyapp.data.adapter.create.MultipleImagesAdapter
+import com.example.diyapp.data.adapter.user.SessionManager
 import com.example.diyapp.databinding.ActivityCreationDetailBinding
 
 class CreationDetailActivity : AppCompatActivity() {
@@ -130,11 +131,11 @@ class CreationDetailActivity : AppCompatActivity() {
 
         when {
             title.isBlank() || description.isBlank() || instructions.isBlank() -> {
-                showToast(getString(R.string.fillFields))
+                SessionManager.showToast(this,R.string.fillFields)
             }
 
             else -> {
-                showToast(getString(R.string.publicationEdited))
+                SessionManager.showToast(this,R.string.publicationEdited)
                 finish() // asegúrate de que se llame después de que se complete la tarea asíncrona.
             }
         }
@@ -142,11 +143,7 @@ class CreationDetailActivity : AppCompatActivity() {
 
     private fun deletePublication() {
         // Aquí va tu lógica de eliminación de la publicación
-        showToast(getString(R.string.publicationDeleted))
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        SessionManager.showToast(this,R.string.publicationDeleted)
     }
 
     private fun setImageFromBase64(base64String: String, imageView: ImageView) {

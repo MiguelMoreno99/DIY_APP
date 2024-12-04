@@ -1,6 +1,7 @@
 package com.example.diyapp.data.adapter.user
 
 import android.content.Context
+import android.widget.Toast
 
 object SessionManager {
     private const val PREF_NAME = "AppPreferences"
@@ -42,5 +43,9 @@ object SessionManager {
             "lastname" to (sharedPref.getString(KEY_LASTNAME, "") ?: ""),
             "photo" to (sharedPref.getString(KEY_PHOTO, "") ?: "")
         )
+    }
+
+    fun showToast(context: Context, message: Int) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }

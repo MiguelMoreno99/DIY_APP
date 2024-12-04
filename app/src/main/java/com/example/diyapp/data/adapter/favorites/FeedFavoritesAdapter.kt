@@ -28,7 +28,7 @@ class FeedFavoritesAdapter(
         private val creationDate: TextView = view.findViewById(R.id.tvCreationDate)
         private val photoMain: ImageView = view.findViewById(R.id.ivMainImage)
         fun render(feedFavoritesModel: FeedFavorites) {
-            userName.text = feedFavoritesModel.user
+            userName.text = feedFavoritesModel.email
             category.text = feedFavoritesModel.theme
             title.text = feedFavoritesModel.title
             likesCountNumber.text = feedFavoritesModel.numLikes.toString()

@@ -28,7 +28,7 @@ class FeedExploreAdapter(
         private val creationDate: TextView = view.findViewById(R.id.tvCreationDate)
         private val photoMain: ImageView = view.findViewById(R.id.ivMainImage)
         fun render(feedExploreModel: FeedExplore) {
-            userName.text = feedExploreModel.user
+            userName.text = feedExploreModel.email
             category.text = feedExploreModel.theme
             title.text = feedExploreModel.title
             likesCountNumber.text = feedExploreModel.numLikes.toString()

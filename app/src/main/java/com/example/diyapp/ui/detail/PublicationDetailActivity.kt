@@ -59,9 +59,9 @@ class PublicationDetailActivity : AppCompatActivity() {
 
     private fun handleAddToFavorites() {
         if (SessionManager.isUserLoggedIn(this)) {
-            Toast.makeText(this, getString(R.string.addedToFavorites), Toast.LENGTH_SHORT).show()
+            SessionManager.showToast(this,R.string.addedToFavorites)
         } else {
-            Toast.makeText(this, getString(R.string.loginRequired), Toast.LENGTH_SHORT).show()
+            SessionManager.showToast(this, R.string.loginRequired)
         }
     }
 

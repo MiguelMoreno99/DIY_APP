@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
 import com.example.diyapp.data.adapter.create.MultipleImagesAdapter
+import com.example.diyapp.data.adapter.user.SessionManager
 import com.example.diyapp.databinding.FragmentNewPublicationBinding
 
 class NewPublicationFragment : Fragment() {
@@ -119,9 +120,9 @@ class NewPublicationFragment : Fragment() {
         val description = etDescription.text.toString()
         val instructions = etInstructions.text.toString()
         if (title == "" || description == "" || instructions == "" || ivImage.drawable == null || recyclerViewAdapter.itemCount == 0){
-            Toast.makeText(requireContext(), "Fill all the fields First!", Toast.LENGTH_SHORT).show()
+            SessionManager.showToast(requireContext(), R.string.fillFields)
         }else{
-            Toast.makeText(requireContext(), "Publication Created", Toast.LENGTH_SHORT).show()
+            SessionManager.showToast(requireContext(), R.string.publicationCreated)
             findNavController().navigate(R.id.exploreFragment)
         }
     }

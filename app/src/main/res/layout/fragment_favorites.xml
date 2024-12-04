@@ -8,16 +8,24 @@
     android:orientation="vertical"
     android:padding="16dp"
     tools:context=".ui.favorites.FavoritesFragment">
+
     <androidx.appcompat.widget.SearchView
         android:id="@+id/svFavorites"
         android:layout_width="match_parent"
-        android:background="@color/others"
-        android:layout_height="50dp" />
+        android:layout_height="50dp"
+        android:background="@color/others" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerFeedFavorites"
-        android:layout_marginTop="60dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
 </FrameLayout>

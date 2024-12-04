@@ -1,7 +1,6 @@
 package com.example.diyapp.ui.explore
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -60,9 +59,11 @@ class MainActivity : AppCompatActivity() {
     private fun navigateWithLoginCheck(destinationIfLoggedIn: Int, destinationIfNotLoggedIn: Int) {
         if (SessionManager.isUserLoggedIn(this)) {
             navController.navigate(destinationIfLoggedIn)
+        } else if (destinationIfLoggedIn == R.id.manageAccountsFragment && destinationIfNotLoggedIn == R.id.loginFragment) {
+            navController.navigate(destinationIfNotLoggedIn)
         } else {
             navController.navigate(destinationIfNotLoggedIn)
-            Toast.makeText(this, getString(R.string.loginFirst), Toast.LENGTH_SHORT).show()
+            SessionManager.showToast(this, R.string.loginFirst)
         }
     }
 }

@@ -6,7 +6,9 @@ import com.example.diyapp.data.adapter.favorites.FeedFavorites
 import com.example.diyapp.data.adapter.response.IdResponse
 import com.example.diyapp.data.adapter.response.ServerResponse
 import com.example.diyapp.data.adapter.response.UserCredentials
+import com.example.diyapp.data.adapter.response.UserEditPublication
 import com.example.diyapp.data.adapter.response.UserEmail
+import com.example.diyapp.data.adapter.response.UserNewPublication
 import com.example.diyapp.data.adapter.user.User
 import retrofit2.Response
 import retrofit2.http.Body
@@ -15,36 +17,43 @@ import retrofit2.http.POST
 
 interface APIService {
 
-    @GET("ProyectoSistemasMoviles/index.php/publicacion/list/")
-    suspend fun getFeedExplore(): Response<List<FeedExplore>>
+    @GET("publicacion/list/")
+    suspend fun getFeedExplore(): Response<List<FeedExplore>> //jala
 
 
-    @POST("ProyectoSistemasMoviles/index.php/publicacion/listPorUsuario")
-    suspend fun getFeedCreations(@Body userEmail: UserEmail): Response<List<FeedCreations>> // mandar correo
-    @POST("ProyectoSistemasMoviles/index.php/favorito/list")
-    suspend fun getFeedFavorites(@Body userEmail: UserEmail): Response<List<FeedFavorites>> // mandar correo
-    @POST("ProyectoSistemasMoviles/index.php/user/listUser")
-    suspend fun fillUser(@Body userEmail: UserEmail): Response<User> // mandar correo
+    @POST("publicacion/listPorUsuario/")
+    suspend fun getFeedCreations(@Body userEmail: UserEmail): Response<List<FeedCreations>> //jala
+
+    @POST("favorito/list/")
+    suspend fun getFeedFavorites(@Body userEmail: UserEmail): Response<List<FeedFavorites>> //jala
+
+    @POST("user/listUser/")
+    suspend fun listUser(@Body userEmail: UserEmail): Response<User> //jala
 
 
-    @POST("ProyectoSistemasMoviles/index.php/")
-    suspend fun editCreation(@Body creation: FeedCreations): Response<ServerResponse> //mandar toda la publicacion
-    @POST("ProyectoSistemasMoviles/index.php/")
-    suspend fun createPublication(@Body creation: FeedCreations): Response<ServerResponse> //mandar toda la publicacion
-    @POST("ProyectoSistemasMoviles/index.php/user/modify")
-    suspend fun modifyUser(@Body user: User): Response<User> // mandartodo el usuario
-    @POST("ProyectoSistemasMoviles/index.php/user/insert")
-    suspend fun insertUser(@Body user: User): Response<ServerResponse> // mandartodo el usuario
+    @POST("publicacion/modify/")
+    suspend fun editCreation(@Body creation: UserEditPublication): Response<ServerResponse>
+
+    @POST("publicacion/insertPublicacion/")
+    suspend fun createPublication(@Body creation: UserNewPublication): Response<ServerResponse>
+
+    @POST("user/modify/")
+    suspend fun modifyUser(@Body user: User): Response<User>
+
+    @POST("user/insert/")
+    suspend fun insertUser(@Body user: User): Response<ServerResponse>
 
 
-    @POST("ProyectoSistemasMoviles/index.php/user/verify")
-    suspend fun verifyUser(@Body userCredentials: UserCredentials): Response<ServerResponse> // mandar correo y contra
+    @POST("user/verify/")
+    suspend fun verifyUser(@Body userCredentials: UserCredentials): Response<ServerResponse>
 
 
-    @POST("ProyectoSistemasMoviles/index.php/")
-    suspend fun deleteCreation(@Body idPublication: IdResponse): Response<ServerResponse> //mandar id de la publicacion
-    @POST("ProyectoSistemasMoviles/index.php/")
-    suspend fun addToFavorites(@Body idPublication: IdResponse): Response<ServerResponse> //mandar id de la publicacion
-    @POST("ProyectoSistemasMoviles/index.php/")
-    suspend fun deleteFromFavorites(@Body idPublication: IdResponse): Response<ServerResponse> //mandar id de la publicacion
+    @POST("publicacion/eliminar/")
+    suspend fun deleteCreation(@Body idPublication: IdResponse): Response<ServerResponse>
+
+    @POST("favorito/insertFavorito/")
+    suspend fun addToFavorites(@Body idPublication: IdResponse): Response<ServerResponse>
+
+    @POST("favorito/eliminar/")
+    suspend fun deleteFromFavorites(@Body idPublication: IdResponse): Response<ServerResponse>
 }

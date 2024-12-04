@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">DIY App</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     //Bottom Bar
     <string name="explore">Explore</string>
@@ -63,8 +61,14 @@
     <string name="userUpdated">User Updated!</string>
     <string name="publicationEdited">Publication Edited!</string>
     <string name="publicationDeleted">Publication Deleted!</string>
+    <string name="publicationCreated">Publication Created!</string>
     <string name="addedToFavorites">Added to Favorites!</string>
     <string name="loginRequired">Login Required!</string>
     <string name="removedFromFavorites">Removed from Favorites!</string>
+    <string name="notHaveFavorites">You not have favorites!</string>
+    <string name="noPublications">There are no publications!</string>
+    <string name="notHavePublications">Removed from Favorites!</string>
+    <string name="unableToLoadData">Unable to load data!</string>
+    <string name="error">Error!</string>
 
 </resources>

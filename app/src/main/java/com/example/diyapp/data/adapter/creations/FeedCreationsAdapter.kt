@@ -28,7 +28,7 @@ class FeedCreationsAdapter(
         private val creationDate: TextView = view.findViewById(R.id.tvCreationDate)
         private val photoMain: ImageView = view.findViewById(R.id.ivMainImage)
         fun render(feedCreationsModel: FeedCreations) {
-            userName.text = feedCreationsModel.user
+            userName.text = feedCreationsModel.email
             category.text = feedCreationsModel.theme
             title.text = feedCreationsModel.title
             likesCountNumber.text = feedCreationsModel.numLikes.toString()
