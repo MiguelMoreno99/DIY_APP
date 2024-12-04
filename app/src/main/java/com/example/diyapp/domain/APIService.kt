@@ -18,17 +18,17 @@ import retrofit2.http.POST
 interface APIService {
 
     @GET("publicacion/list/")
-    suspend fun getFeedExplore(): Response<List<FeedExplore>> //jala
+    suspend fun getFeedExplore(): Response<List<FeedExplore>>
 
 
     @POST("publicacion/listPorUsuario/")
-    suspend fun getFeedCreations(@Body userEmail: UserEmail): Response<List<FeedCreations>> //jala
+    suspend fun getFeedCreations(@Body userEmail: UserEmail): Response<List<FeedCreations>>
 
     @POST("favorito/list/")
-    suspend fun getFeedFavorites(@Body userEmail: UserEmail): Response<List<FeedFavorites>> //jala
+    suspend fun getFeedFavorites(@Body userEmail: UserEmail): Response<List<FeedFavorites>>
 
     @POST("user/listUser/")
-    suspend fun listUser(@Body userEmail: UserEmail): Response<User> //jala
+    suspend fun listUser(@Body userEmail: UserEmail): Response<User>
 
 
     @POST("publicacion/modify/")

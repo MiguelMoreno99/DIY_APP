@@ -65,10 +65,11 @@
     <string name="addedToFavorites">Added to Favorites!</string>
     <string name="loginRequired">Login Required!</string>
     <string name="removedFromFavorites">Removed from Favorites!</string>
-    <string name="notHaveFavorites">You not have favorites!</string>
-    <string name="noPublications">There are no publications!</string>
-    <string name="notHavePublications">Removed from Favorites!</string>
-    <string name="unableToLoadData">Unable to load data!</string>
+    <string name="notHaveFavorites">You not have Favorites!</string>
+    <string name="noPublications">There are no Publications!</string>
+    <string name="notHavePublications">You not have Publications!</string>
+    <string name="unableToLoadData">Unable to load Data!</string>
     <string name="error">Error!</string>
+    <string name="error2">Something went Wrong!</string>
 
 </resources>

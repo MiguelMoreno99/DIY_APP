@@ -75,7 +75,6 @@ class MyPublicationsFragment : Fragment() {
                     .getFeedCreations(user)
 
                 val responseBody = call.body()
-                Log.d("API Response", "Server Response: $responseBody")
 
                 withContext(Dispatchers.Main) {
 
@@ -99,4 +98,5 @@ class MyPublicationsFragment : Fragment() {
             }
         }
     }
+    
 }
