@@ -6,7 +6,6 @@ import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -46,7 +45,7 @@ class ManageAccountsFragment : Fragment() {
         binding.logoutButton.setOnClickListener {
             SessionManager.setUserLoggedIn(requireContext(), false)
             findNavController().navigate(R.id.exploreFragment)
-            SessionManager.showToast(requireContext(),R.string.logoutSuccessful)
+            SessionManager.showToast(requireContext(), R.string.logoutSuccessful)
         }
 
         val pickMedia =
@@ -73,15 +72,15 @@ class ManageAccountsFragment : Fragment() {
 
         when {
             name.isBlank() || lastname.isBlank() || password.isBlank() || confirmPassword.isBlank() -> {
-                SessionManager.showToast(requireContext(),R.string.fillFields)
+                SessionManager.showToast(requireContext(), R.string.fillFields)
             }
 
             password != confirmPassword -> {
-                SessionManager.showToast(requireContext(),R.string.verifyPassword)
+                SessionManager.showToast(requireContext(), R.string.verifyPassword)
             }
 
             else -> {
-                SessionManager.showToast(requireContext(),R.string.userUpdated)
+                SessionManager.showToast(requireContext(), R.string.userUpdated)
                 navigateToExploreFragment()
             }
         }

@@ -8,7 +8,6 @@ import android.util.Base64
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Spinner
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -131,11 +130,11 @@ class CreationDetailActivity : AppCompatActivity() {
 
         when {
             title.isBlank() || description.isBlank() || instructions.isBlank() -> {
-                SessionManager.showToast(this,R.string.fillFields)
+                SessionManager.showToast(this, R.string.fillFields)
             }
 
             else -> {
-                SessionManager.showToast(this,R.string.publicationEdited)
+                SessionManager.showToast(this, R.string.publicationEdited)
                 finish() // asegúrate de que se llame después de que se complete la tarea asíncrona.
             }
         }
@@ -143,7 +142,7 @@ class CreationDetailActivity : AppCompatActivity() {
 
     private fun deletePublication() {
         // Aquí va tu lógica de eliminación de la publicación
-        SessionManager.showToast(this,R.string.publicationDeleted)
+        SessionManager.showToast(this, R.string.publicationDeleted)
     }
 
     private fun setImageFromBase64(base64String: String, imageView: ImageView) {

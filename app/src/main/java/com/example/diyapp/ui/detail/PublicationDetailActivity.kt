@@ -4,7 +4,6 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Base64
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -59,7 +58,7 @@ class PublicationDetailActivity : AppCompatActivity() {
 
     private fun handleAddToFavorites() {
         if (SessionManager.isUserLoggedIn(this)) {
-            SessionManager.showToast(this,R.string.addedToFavorites)
+            SessionManager.showToast(this, R.string.addedToFavorites)
         } else {
             SessionManager.showToast(this, R.string.loginRequired)
         }
