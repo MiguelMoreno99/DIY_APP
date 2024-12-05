@@ -1,5 +1,6 @@
 package com.example.diyapp.data.adapter.create
 
+import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +19,8 @@ class MultipleImagesAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_imageinstructions, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_imageinstructions, parent, false)
         return ImageViewHolder(view)
     }
 
@@ -27,5 +29,17 @@ class MultipleImagesAdapter(
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val item = imageUris[position]
         holder.imageView.setImageURI(item)
+    }
+
+    fun getImagesAsBase64(context: Context): List<String> {
+        return imageUris.mapNotNull { uri ->
+            try {
+                val bitmap = ImageUtils.uriToBitmap(context, uri)
+                ImageUtils.bitmapToBase64(bitmap!!)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
     }
 }

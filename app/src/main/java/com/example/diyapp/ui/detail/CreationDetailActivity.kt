@@ -2,13 +2,10 @@ package com.example.diyapp.ui.detail
 
 import RetrofitManager
 import android.annotation.SuppressLint
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.widget.ArrayAdapter
-import android.widget.ImageView
 import android.widget.Spinner
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
@@ -17,8 +14,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diyapp.R
+import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.data.adapter.create.MultipleImagesAdapter
 import com.example.diyapp.data.adapter.creations.FeedCreations
+import com.example.diyapp.data.adapter.explore.InstructionsAdapter
 import com.example.diyapp.data.adapter.response.IdResponse
 import com.example.diyapp.data.adapter.response.ServerResponse
 import com.example.diyapp.data.adapter.response.UserEditPublication
@@ -33,7 +32,7 @@ class CreationDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCreationDetailBinding
     private lateinit var args: CreationDetailActivityArgs
-    private lateinit var imageUris: MutableList<Uri>
+    private val imageUris = mutableListOf<Uri>()
     private lateinit var recyclerViewAdapter: MultipleImagesAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,17 +52,15 @@ class CreationDetailActivity : AppCompatActivity() {
             editTextTitle.setText(item.title)
             editTextDescription.setText(item.description)
             editTextInstructions.setText(item.instructions)
-            imageUris = mutableListOf()
-
-            setImageFromBase64(item.photoMain, imageViewMain)
+            imageViewMain.setImageBitmap(ImageUtils.base64ToBitmap(item.photoMain))
 
             recyclerViewAdapter = MultipleImagesAdapter(imageUris)
-            recyclerViewInstructionPhotos.layoutManager = LinearLayoutManager(
-                this@CreationDetailActivity,
-                LinearLayoutManager.HORIZONTAL,
-                false
-            )
-            recyclerViewInstructionPhotos.adapter = recyclerViewAdapter
+            binding.recyclerViewInstructionPhotos.apply {
+                adapter = recyclerViewAdapter
+                layoutManager =
+                    LinearLayoutManager(this@CreationDetailActivity, LinearLayoutManager.HORIZONTAL, false)
+            }
+            recyclerViewInstructionPhotos.adapter = InstructionsAdapter(item.photoProcess)
 
             setUpImagePickers()
 
@@ -73,23 +70,7 @@ class CreationDetailActivity : AppCompatActivity() {
     }
 
     private fun setUpCategorySpinner() {
-        val options = listOf(
-            "Reciclaje",
-            "Pintura",
-            "Decoración",
-            "Carpintería",
-            "Costura",
-            "Textil",
-            "Joyería",
-            "Papelería",
-            "Cerámica",
-            "Modelado",
-            "Jardinería",
-            "Organización",
-            "Regalos",
-            "Juguetes",
-            "Muebles"
-        )
+        val options = resources.getStringArray(R.array.category_options)
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, options)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerOptionsTheme.adapter = adapter
@@ -120,8 +101,11 @@ class CreationDetailActivity : AppCompatActivity() {
         val pickInstructionImages =
             registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
                 if (uris.isNotEmpty()) {
+                    val startIndex = binding.recyclerViewInstructionPhotos.adapter!!.itemCount
+                    imageUris.clear()
+                    binding.recyclerViewInstructionPhotos.adapter!!.notifyItemRangeRemoved(0,startIndex)
                     imageUris.addAll(uris)
-                    recyclerViewAdapter.notifyDataSetChanged()
+                    binding.recyclerViewInstructionPhotos.adapter = MultipleImagesAdapter(imageUris)
                 }
             }
 
@@ -157,12 +141,6 @@ class CreationDetailActivity : AppCompatActivity() {
                 )
             }
         }
-    }
-
-    private fun setImageFromBase64(base64String: String, imageView: ImageView) {
-        val photoBytes = Base64.decode(base64String, Base64.DEFAULT)
-        val photoBitmap = BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.size)
-        imageView.setImageBitmap(photoBitmap)
     }
 
     private fun deletePublication(id: Int) {

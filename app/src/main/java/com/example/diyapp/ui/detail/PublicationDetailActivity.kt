@@ -1,16 +1,23 @@
 package com.example.diyapp.ui.detail
 
-import android.graphics.BitmapFactory
+import RetrofitManager
 import android.os.Bundle
-import android.util.Base64
-import android.widget.ImageView
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diyapp.R
+import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.data.adapter.explore.InstructionsAdapter
+import com.example.diyapp.data.adapter.response.IdResponse
+import com.example.diyapp.data.adapter.response.ServerResponse
 import com.example.diyapp.data.adapter.user.SessionManager
 import com.example.diyapp.databinding.ActivityPublicationDetailBinding
+import com.example.diyapp.domain.APIService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PublicationDetailActivity : AppCompatActivity() {
 
@@ -22,10 +29,6 @@ class PublicationDetailActivity : AppCompatActivity() {
         binding = ActivityPublicationDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         loadPublicationInfo()
-
-        binding.buttonAddToFavorites.setOnClickListener {
-            handleAddToFavorites()
-        }
     }
 
     private fun loadPublicationInfo() {
@@ -38,7 +41,7 @@ class PublicationDetailActivity : AppCompatActivity() {
             textViewDescription.text = item.description
             textViewInstructions.text = item.instructions
 
-            setImageFromBase64(item.photoMain, imageViewMain)
+            imageViewMain.setImageBitmap(ImageUtils.base64ToBitmap(item.photoMain))
 
             recyclerViewInstructionPhotos.layoutManager =
                 LinearLayoutManager(
@@ -48,19 +51,55 @@ class PublicationDetailActivity : AppCompatActivity() {
                 )
             recyclerViewInstructionPhotos.adapter = InstructionsAdapter(item.photoProcess)
         }
+
+        binding.buttonAddToFavorites.setOnClickListener {
+            handleAddToFavorites(item.idPublication)
+        }
+
     }
 
-    private fun setImageFromBase64(base64String: String, imageView: ImageView) {
-        val photoBytes = Base64.decode(base64String, Base64.DEFAULT)
-        val photoBitmap = BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.size)
-        imageView.setImageBitmap(photoBitmap)
-    }
-
-    private fun handleAddToFavorites() {
+    private fun handleAddToFavorites(idPublication: Int) {
         if (SessionManager.isUserLoggedIn(this)) {
-            SessionManager.showToast(this, R.string.addedToFavorites)
+            addFavoritePublication(idPublication)
         } else {
             SessionManager.showToast(this, R.string.loginRequired)
+        }
+    }
+
+    private fun addFavoritePublication(id: Int) {
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val sharedPref = SessionManager.getUserInfo(this@PublicationDetailActivity)
+                val email = sharedPref["email"]
+                val idResponse = IdResponse(id, email!!)
+                val call = RetrofitManager.getRetroFit().create(APIService::class.java)
+                    .addToFavorites(idResponse)
+
+                val responseBody: ServerResponse = call.body()!!
+
+                withContext(Dispatchers.Main) {
+
+                    if (call.isSuccessful) {
+                        if (responseBody.message.isNotEmpty()) {
+                            SessionManager.showToast(
+                                this@PublicationDetailActivity,
+                                R.string.addedToFavorites
+                            )
+                            withContext(Dispatchers.Main) {
+                                finish()
+                            }
+                        }
+                    } else {
+                        SessionManager.showToast(this@PublicationDetailActivity, R.string.error2)
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    SessionManager.showToast(this@PublicationDetailActivity, R.string.error)
+                }
+                Log.e("API Error", "Error: ${e.message}")
+            }
         }
     }
 

@@ -1,8 +1,6 @@
 package com.example.diyapp.data.adapter.explore
 
 import android.annotation.SuppressLint
-import android.graphics.BitmapFactory
-import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
+import com.example.diyapp.data.adapter.create.ImageUtils
 
 class FeedExploreAdapter(
     private var feedExplorerList: List<FeedExplore>,
@@ -34,10 +33,8 @@ class FeedExploreAdapter(
             likesCountNumber.text = feedExploreModel.numLikes.toString()
             creationDate.text = feedExploreModel.dateCreation
 
-            val photoMainBytes = Base64.decode(feedExploreModel.photoMain, Base64.DEFAULT)
-            val photoMainBitmap =
-                BitmapFactory.decodeByteArray(photoMainBytes, 0, photoMainBytes.size)
-            photoMain.setImageBitmap(photoMainBitmap)
+            photoMain.setImageBitmap(ImageUtils.base64ToBitmap(feedExploreModel.photoMain))
+
             itemView.setOnClickListener { onClick(feedExploreModel) }
         }
     }

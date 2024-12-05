@@ -1,8 +1,6 @@
 package com.example.diyapp.ui.manageaccount
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.diyapp.R
+import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.data.adapter.user.SessionManager
 import com.example.diyapp.databinding.FragmentManageAccountsBinding
 
@@ -36,10 +35,7 @@ class ManageAccountsFragment : Fragment() {
         with(binding) {
             nameEditText.setText(name)
             lastNameEditText.setText(lastname)
-            val photoMainBytes = Base64.decode(profilePicture, Base64.DEFAULT)
-            val photoMainBitmap =
-                BitmapFactory.decodeByteArray(photoMainBytes, 0, photoMainBytes.size)
-            profileImageView.setImageBitmap(photoMainBitmap)
+            profileImageView.setImageBitmap(ImageUtils.base64ToBitmap(profilePicture!!))
         }
 
         binding.logoutButton.setOnClickListener {

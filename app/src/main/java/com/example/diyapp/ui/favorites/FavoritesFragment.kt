@@ -62,6 +62,11 @@ class FavoritesFragment : Fragment() {
         showFeed()
     }
 
+    override fun onResume() {
+        super.onResume()
+        showFeed()
+    }
+
     private fun showFeed() {
 
         binding.progressBar.visibility = View.VISIBLE

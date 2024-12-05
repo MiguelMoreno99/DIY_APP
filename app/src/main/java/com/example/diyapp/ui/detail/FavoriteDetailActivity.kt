@@ -1,16 +1,23 @@
 package com.example.diyapp.ui.detail
 
-import android.graphics.BitmapFactory
+import RetrofitManager
 import android.os.Bundle
-import android.util.Base64
-import android.widget.ImageView
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diyapp.R
+import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.data.adapter.explore.InstructionsAdapter
+import com.example.diyapp.data.adapter.response.IdResponse
+import com.example.diyapp.data.adapter.response.ServerResponse
 import com.example.diyapp.data.adapter.user.SessionManager
 import com.example.diyapp.databinding.ActivityFavoriteDetailBinding
+import com.example.diyapp.domain.APIService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FavoriteDetailActivity : AppCompatActivity() {
 
@@ -23,10 +30,6 @@ class FavoriteDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         loadPublicationInfo()
-
-        binding.buttonRemoveFromFavorites.setOnClickListener {
-            removeFromFavorites()
-        }
     }
 
     private fun loadPublicationInfo() {
@@ -38,7 +41,7 @@ class FavoriteDetailActivity : AppCompatActivity() {
             textViewTheme.text = item.theme
             textViewDescription.text = item.description
             textViewInstructions.text = item.instructions
-            setImageFromBase64(item.photoMain, imageViewMain)
+            imageViewMain.setImageBitmap(ImageUtils.base64ToBitmap(item.photoMain))
 
             recyclerViewInstructionPhotos.layoutManager =
                 LinearLayoutManager(
@@ -48,15 +51,46 @@ class FavoriteDetailActivity : AppCompatActivity() {
                 )
             recyclerViewInstructionPhotos.adapter = InstructionsAdapter(item.photoProcess)
         }
+
+        binding.buttonRemoveFromFavorites.setOnClickListener {
+            removeFavoritePublication(item.idPublication)
+        }
     }
 
-    private fun setImageFromBase64(base64String: String, imageView: ImageView) {
-        val photoBytes = Base64.decode(base64String, Base64.DEFAULT)
-        val photoBitmap = BitmapFactory.decodeByteArray(photoBytes, 0, photoBytes.size)
-        imageView.setImageBitmap(photoBitmap)
-    }
+    private fun removeFavoritePublication(id: Int) {
 
-    private fun removeFromFavorites() {
-        SessionManager.showToast(this, R.string.removedFromFavorites)
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val sharedPref = SessionManager.getUserInfo(this@FavoriteDetailActivity)
+                val email = sharedPref["email"]
+                val idResponse = IdResponse(id, email!!)
+                val call = RetrofitManager.getRetroFit().create(APIService::class.java)
+                    .deleteFromFavorites(idResponse)
+
+                val responseBody: ServerResponse = call.body()!!
+
+                withContext(Dispatchers.Main) {
+
+                    if (call.isSuccessful) {
+                        if (responseBody.message.isNotEmpty()) {
+                            SessionManager.showToast(
+                                this@FavoriteDetailActivity,
+                                R.string.removedFromFavorites
+                            )
+                            withContext(Dispatchers.Main) {
+                                finish()
+                            }
+                        }
+                    } else {
+                        SessionManager.showToast(this@FavoriteDetailActivity, R.string.error2)
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    SessionManager.showToast(this@FavoriteDetailActivity, R.string.error)
+                }
+                Log.e("API Error", "Error: ${e.message}")
+            }
+        }
     }
 }

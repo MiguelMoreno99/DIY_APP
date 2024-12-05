@@ -72,4 +72,24 @@
     <string name="error">Error!</string>
     <string name="error2">Something went Wrong!</string>
 
+    <string-array name="category_options">
+        <item>Reciclaje</item>
+        <item>Pintura</item>
+        <item>Reciclaje</item>
+        <item>Pintura</item>
+        <item>Decoración</item>
+        <item>Carpintería</item>
+        <item>Costura</item>
+        <item>Textil</item>
+        <item>Joyería</item>
+        <item>Papelería</item>
+        <item>Cerámica</item>
+        <item>Modelado</item>
+        <item>Jardinería</item>
+        <item>Organización</item>
+        <item>Regalos</item>
+        <item>Juguetes</item>
+        <item>Muebles</item>
+    </string-array>
+
 </resources>
