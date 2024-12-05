@@ -100,7 +100,7 @@
         android:theme="@style/Feed_Letters" />
 
     <Button
-        android:id="@+id/applyChangesButton"
+        android:id="@+id/registerButton"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginHorizontal="30dp"

@@ -27,7 +27,7 @@ interface APIService {
     suspend fun getFeedFavorites(@Body userEmail: UserEmail): Response<List<FeedFavorites>>
 
     @POST("user/listUser/")
-    suspend fun listUser(@Body userEmail: UserEmail): Response<User>
+    suspend fun listUser(@Body userEmail: UserEmail): Response<List<User>>
 
     @POST("publicacion/modify/")
     suspend fun editCreation(@Body creation: UserEditPublication): Response<ServerResponse>

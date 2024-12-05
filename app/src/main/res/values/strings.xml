@@ -56,9 +56,14 @@
     <string name="loginSuccessful">Login Successful!</string>
     <string name="logoutSuccessful">Logout Successful!</string>
     <string name="wrongCredentials">Wrong Credentials!</string>
+    <string name="differentPasswords">Different Passwords!</string>
+    <string name="checkEmail">Wrong Email Format!</string>
+    <string name="checkPassword">Wrong Password Format!</string>
     <string name="fillFields">Fill all the fields First!</string>
     <string name="verifyPassword">Please Verify Password!</string>
     <string name="userUpdated">User Updated!</string>
+    <string name="userCreated">User Created!</string>
+    <string name="userAlreadyExists">Email Already Exists!</string>
     <string name="publicationEdited">Publication Edited!</string>
     <string name="publicationDeleted">Publication Deleted!</string>
     <string name="publicationCreated">Publication Created!</string>

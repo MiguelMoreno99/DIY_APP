@@ -2,6 +2,7 @@ package com.example.diyapp.data.adapter.user
 
 import android.content.Context
 import android.widget.Toast
+import com.example.diyapp.R
 
 object SessionManager {
     private const val PREF_NAME = "AppPreferences"
@@ -47,5 +48,31 @@ object SessionManager {
 
     fun showToast(context: Context, message: Int) {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    fun validateInputs(context: Context, email: String, password: String): Boolean {
+        val isEmailValid = isValidEmail(email)
+        val isPasswordValid = isValidPassword(password)
+
+        if (!isEmailValid) {
+            showToast(context, R.string.checkEmail)
+            return false
+        }
+        if (!isPasswordValid) {
+            showToast(context, R.string.checkPassword)
+            return false
+        }
+        return true
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        val emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+"
+        return email.matches(emailPattern.toRegex())
+    }
+
+    private fun isValidPassword(password: String): Boolean {
+        val passwordPattern =
+            "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$"
+        return password.matches(passwordPattern.toRegex())
     }
 }
