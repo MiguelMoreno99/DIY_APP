@@ -5,7 +5,6 @@ import com.example.diyapp.data.adapter.explore.FeedExplore
 import com.example.diyapp.data.adapter.favorites.FeedFavorites
 import com.example.diyapp.data.adapter.response.IdResponse
 import com.example.diyapp.data.adapter.response.ServerResponse
-import com.example.diyapp.data.adapter.response.UserCredentials
 import com.example.diyapp.data.adapter.response.UserEditPublication
 import com.example.diyapp.data.adapter.response.UserEmail
 import com.example.diyapp.data.adapter.response.UserNewPublication
