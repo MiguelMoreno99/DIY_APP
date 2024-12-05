@@ -11,11 +11,6 @@ data class IdResponse(
     @SerializedName("correo") val email: String
 )
 
-data class UserCredentials(
-    @SerializedName("correo") val email: String,
-    @SerializedName("contra") val password: String
-)
-
 data class UserEmail(
     @SerializedName("correo") val email: String
 )
