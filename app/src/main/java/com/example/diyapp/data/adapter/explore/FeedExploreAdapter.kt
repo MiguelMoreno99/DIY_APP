@@ -58,6 +58,13 @@ class FeedExploreAdapter(
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun deleteData() {
+        filteredList.clear()
+        feedExplorerList = filteredList
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int {
         return filteredList.size
     }

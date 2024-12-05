@@ -17,6 +17,7 @@ import com.example.diyapp.data.adapter.user.SessionManager
 import com.example.diyapp.databinding.FragmentExploreBinding
 import com.example.diyapp.domain.APIService
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -38,12 +39,14 @@ class ExploreFragment : Fragment() {
 
         setupRecyclerView()
         setupSearchView()
-        showFeed()
     }
 
     override fun onResume() {
         super.onResume()
-        showFeed()
+        lifecycleScope.launch {
+            delay(1000)
+            showFeed()
+        }
     }
 
     private fun showFeed() {
@@ -66,6 +69,7 @@ class ExploreFragment : Fragment() {
                             adapter.updateData(responseBody)
                         } else {
                             SessionManager.showToast(requireContext(), R.string.noPublications)
+                            adapter.deleteData()
                         }
                     } else {
                         SessionManager.showToast(requireContext(), R.string.unableToLoadData)

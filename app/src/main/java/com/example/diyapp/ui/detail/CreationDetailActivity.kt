@@ -11,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.drawToBitmap
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diyapp.R
@@ -123,6 +124,8 @@ class CreationDetailActivity : AppCompatActivity() {
         val category = binding.spinnerOptionsTheme.selectedItem.toString()
         val description = binding.editTextDescription.text.toString()
         val instructions = binding.editTextInstructions.text.toString()
+        val mainPhoto = ImageUtils.bitmapToBase64(binding.imageViewMain.drawToBitmap())
+        val photos = recyclerViewAdapter.getImagesAsBase64(this)
 
         when {
             title.isBlank() || description.isBlank() || instructions.isBlank() -> {
@@ -134,10 +137,10 @@ class CreationDetailActivity : AppCompatActivity() {
                     item.idPublication,
                     title,
                     category,
-                    item.photoMain,
+                    mainPhoto,
                     description,
                     instructions,
-                    item.photoProcess
+                    photos
                 )
             }
         }

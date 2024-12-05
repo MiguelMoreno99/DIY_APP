@@ -58,6 +58,13 @@ class FeedCreationsAdapter(
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun deleteData() {
+        filteredList.clear()
+        feedCreationsList = filteredList
+        notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int {
         return filteredList.size
     }

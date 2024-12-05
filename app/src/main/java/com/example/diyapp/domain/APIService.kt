@@ -20,7 +20,6 @@ interface APIService {
     @GET("publicacion/list/")
     suspend fun getFeedExplore(): Response<List<FeedExplore>>
 
-
     @POST("publicacion/listPorUsuario/")
     suspend fun getFeedCreations(@Body userEmail: UserEmail): Response<List<FeedCreations>>
 
@@ -29,7 +28,6 @@ interface APIService {
 
     @POST("user/listUser/")
     suspend fun listUser(@Body userEmail: UserEmail): Response<User>
-
 
     @POST("publicacion/modify/")
     suspend fun editCreation(@Body creation: UserEditPublication): Response<ServerResponse>
@@ -43,10 +41,8 @@ interface APIService {
     @POST("user/insert/")
     suspend fun insertUser(@Body user: User): Response<ServerResponse>
 
-
     @POST("user/verify/")
     suspend fun verifyUser(@Body userCredentials: UserCredentials): Response<ServerResponse>
-
 
     @POST("publicacion/eliminar/")
     suspend fun deleteCreation(@Body idPublication: IdResponse): Response<ServerResponse>
