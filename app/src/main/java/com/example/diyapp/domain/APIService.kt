@@ -36,13 +36,10 @@ interface APIService {
     suspend fun createPublication(@Body creation: UserNewPublication): Response<ServerResponse>
 
     @POST("user/modify/")
-    suspend fun modifyUser(@Body user: User): Response<User>
+    suspend fun modifyUser(@Body user: User): Response<List<User>>
 
     @POST("user/insert/")
     suspend fun insertUser(@Body user: User): Response<ServerResponse>
-
-    @POST("user/verify/")
-    suspend fun verifyUser(@Body userCredentials: UserCredentials): Response<ServerResponse>
 
     @POST("publicacion/eliminar/")
     suspend fun deleteCreation(@Body idPublication: IdResponse): Response<ServerResponse>

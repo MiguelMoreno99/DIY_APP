@@ -11,6 +11,7 @@
 
     //Login, register, Manage Account
     <string name="mail">Mail</string>
+    <string name="newPassword">New Password (If you Want to change it)</string>
     <string name="password">Password</string>
     <string name="confirmPassword">Confirm Password</string>
     <string name="login">Login</string>

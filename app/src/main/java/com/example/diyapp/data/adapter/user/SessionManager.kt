@@ -10,6 +10,7 @@ object SessionManager {
     private const val KEY_EMAIL = "email"
     private const val KEY_NAME = "name"
     private const val KEY_LASTNAME = "lastname"
+    private const val KEY_PASSWORD = "password"
     private const val KEY_PHOTO = "photo"
 
     fun isUserLoggedIn(context: Context): Boolean {
@@ -23,6 +24,7 @@ object SessionManager {
         email: String = "",
         name: String = "",
         lastname: String = "",
+        password: String = "",
         photo: String = ""
     ) {
         val sharedPref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
@@ -31,6 +33,7 @@ object SessionManager {
             putString(KEY_EMAIL, email)
             putString(KEY_NAME, name)
             putString(KEY_LASTNAME, lastname)
+            putString(KEY_PASSWORD, password)
             putString(KEY_PHOTO, photo)
             apply()
         }
@@ -42,6 +45,7 @@ object SessionManager {
             "email" to (sharedPref.getString(KEY_EMAIL, "") ?: ""),
             "name" to (sharedPref.getString(KEY_NAME, "") ?: ""),
             "lastname" to (sharedPref.getString(KEY_LASTNAME, "") ?: ""),
+            "password" to (sharedPref.getString(KEY_PASSWORD, "") ?: ""),
             "photo" to (sharedPref.getString(KEY_PHOTO, "") ?: "")
         )
     }
@@ -70,7 +74,7 @@ object SessionManager {
         return email.matches(emailPattern.toRegex())
     }
 
-    private fun isValidPassword(password: String): Boolean {
+    fun isValidPassword(password: String): Boolean {
         val passwordPattern =
             "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$"
         return password.matches(passwordPattern.toRegex())

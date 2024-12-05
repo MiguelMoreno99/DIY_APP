@@ -61,6 +61,19 @@
         android:theme="@style/Feed_Letters2" />
 
     <EditText
+        android:id="@+id/newPasswordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="14dp"
+        android:autofillHints=""
+        android:background="@drawable/edittext_background"
+        android:hint="@string/newPassword"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:theme="@style/Feed_Letters2" />
+
+    <EditText
         android:id="@+id/passwordEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
