@@ -5,23 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diyapp.R
 import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.explore.FeedExploreAdapter
-import com.example.diyapp.data.adapter.explore.FeedExploreProvider
 import com.example.diyapp.databinding.FragmentExploreBinding
-import com.example.diyapp.domain.UseCases
-import kotlinx.coroutines.delay
+import com.example.diyapp.ui.viewmodel.ExploreViewModel
 import kotlinx.coroutines.launch
 
 class ExploreFragment : Fragment() {
+
     private var _binding: FragmentExploreBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: FeedExploreAdapter
-    private var useCases: UseCases = UseCases()
+    private val viewModel: ExploreViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -35,30 +35,20 @@ class ExploreFragment : Fragment() {
 
         setupRecyclerView()
         setupSearchView()
+        observeViewModel()
+
+        viewModel.loadFeed()
     }
 
     override fun onResume() {
         super.onResume()
-        binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
-            delay(1000)
-            showFeed()
-            binding.progressBar.visibility = View.GONE
-        }
-    }
-
-    private suspend fun showFeed() {
-        val response = useCases.getFeedExplore()
-        if (response.isNotEmpty()) {
-            adapter.updateData(response)
-        } else {
-            SessionManager.showToast(requireContext(), R.string.noPublications)
-            adapter.deleteData()
+            viewModel.loadFeed()
         }
     }
 
     private fun setupRecyclerView() {
-        adapter = FeedExploreAdapter(FeedExploreProvider.feedExploreList) { item ->
+        adapter = FeedExploreAdapter(emptyList()) { item ->
             findNavController().navigate(
                 ExploreFragmentDirections.actionExploreFragmentToPublicationDetailActivity(item)
             )
@@ -81,5 +71,22 @@ class ExploreFragment : Fragment() {
                 return true
             }
         })
+    }
+
+    private fun observeViewModel() {
+        viewModel.feed.observe(viewLifecycleOwner) { feed ->
+            adapter.updateData(feed)
+        }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
+        viewModel.showNoPublicationsMessage.observe(viewLifecycleOwner) { show ->
+            if (show) {
+                SessionManager.showToast(requireContext(), R.string.noPublications)
+                adapter.deleteData()
+            }
+        }
     }
 }

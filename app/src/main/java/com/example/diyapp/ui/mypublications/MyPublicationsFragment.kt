@@ -5,23 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.diyapp.R
 import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.creations.FeedCreationsAdapter
-import com.example.diyapp.data.adapter.creations.FeedCreationsProvider
 import com.example.diyapp.databinding.FragmentMyPublicationsBinding
-import com.example.diyapp.domain.UseCases
-import kotlinx.coroutines.delay
+import com.example.diyapp.ui.viewmodel.MyPublicationsViewModel
 import kotlinx.coroutines.launch
 
 class MyPublicationsFragment : Fragment() {
     private var _binding: FragmentMyPublicationsBinding? = null
     private val binding get() = _binding!!
+
     private lateinit var adapter: FeedCreationsAdapter
-    private var useCases: UseCases = UseCases()
+    private val viewModel: MyPublicationsViewModel by viewModels()
     private var email: String = ""
 
     override fun onCreateView(
@@ -35,20 +34,48 @@ class MyPublicationsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sharedPref = SessionManager.getUserInfo(requireContext())
-        email = sharedPref["email"]!!
+        setupRecyclerView()
+        setupSearchView()
 
-        adapter =
-            FeedCreationsAdapter(FeedCreationsProvider.feedCreationsList) { item ->
-                findNavController().navigate(
-                    MyPublicationsFragmentDirections.actionMyPublicationsFragmentToCreationDetailActivity(
-                        item
-                    )
-                )
+        val sharedPref = SessionManager.getUserInfo(requireContext())
+        email = sharedPref["email"] ?: ""
+
+        viewModel.feedCreations.observe(viewLifecycleOwner) { creations ->
+            adapter.updateData(creations)
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) { messageResId ->
+            messageResId?.let {
+                SessionManager.showToast(requireContext(), it)
+                adapter.deleteData()
             }
+        }
+
+        lifecycleScope.launch {
+            viewModel.loadFeedCreations(email)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            viewModel.loadFeedCreations(email)
+        }
+    }
+
+    private fun setupRecyclerView() {
+        adapter = FeedCreationsAdapter(emptyList()) { item ->
+            findNavController().navigate(
+                MyPublicationsFragmentDirections.actionMyPublicationsFragmentToCreationDetailActivity(
+                    item
+                )
+            )
+        }
         binding.recyclerFeedCreations.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerFeedCreations.adapter = adapter
+    }
 
+    private fun setupSearchView() {
         binding.svCreations.setOnQueryTextListener(object :
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -63,23 +90,8 @@ class MyPublicationsFragment : Fragment() {
         })
     }
 
-    override fun onResume() {
-        super.onResume()
-        binding.progressBar.visibility = View.VISIBLE
-        lifecycleScope.launch {
-            delay(1000)
-            showFeed(email)
-            binding.progressBar.visibility = View.GONE
-        }
-    }
-
-    private suspend fun showFeed(email: String) {
-        val response = useCases.getFeedCreations(email)
-        if (response.isNotEmpty()) {
-            adapter.updateData(response)
-        } else {
-            SessionManager.showToast(requireContext(), R.string.notHavePublications)
-            adapter.deleteData()
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

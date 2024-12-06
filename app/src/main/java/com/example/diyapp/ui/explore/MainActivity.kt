@@ -1,6 +1,7 @@
 package com.example.diyapp.ui.explore
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -8,16 +9,20 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.diyapp.R
 import com.example.diyapp.data.SessionManager
 import com.example.diyapp.databinding.ActivityMainBinding
+import com.example.diyapp.ui.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUI()
+        setupObservers()
     }
 
     private fun initUI() {
@@ -29,6 +34,7 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         navController = navHost.navController
         binding.bottomNavView.setupWithNavController(navController)
+
         binding.bottomNavView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.exploreFragment -> navController.navigate(R.id.exploreFragment)
@@ -57,13 +63,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateWithLoginCheck(destinationIfLoggedIn: Int, destinationIfNotLoggedIn: Int) {
-        if (SessionManager.isUserLoggedIn(this)) {
-            navController.navigate(destinationIfLoggedIn)
-        } else if (destinationIfLoggedIn == R.id.manageAccountsFragment && destinationIfNotLoggedIn == R.id.loginFragment) {
-            navController.navigate(destinationIfNotLoggedIn)
-        } else {
-            navController.navigate(destinationIfNotLoggedIn)
-            SessionManager.showToast(this, R.string.loginFirst)
+        val isLoggedIn = SessionManager.isUserLoggedIn(this)
+        viewModel.checkLoginAndNavigate(isLoggedIn, destinationIfLoggedIn, destinationIfNotLoggedIn)
+    }
+
+    private fun setupObservers() {
+        viewModel.navigationCommand.observe(this) { (destination, showToast) ->
+            if (showToast) {
+                SessionManager.showToast(this, R.string.loginFirst)
+            }
+            navController.navigate(destination)
         }
     }
 }

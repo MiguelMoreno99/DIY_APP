@@ -11,6 +11,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,17 +20,17 @@ import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.data.adapter.create.MultipleImagesAdapter
 import com.example.diyapp.databinding.FragmentNewPublicationBinding
-import com.example.diyapp.domain.UseCases
+import com.example.diyapp.ui.viewmodel.NewPublicationViewModel
 import kotlinx.coroutines.launch
 
 class NewPublicationFragment : Fragment() {
 
     private var _binding: FragmentNewPublicationBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: NewPublicationViewModel by viewModels()
     private val imageUris = mutableListOf<Uri>()
     private lateinit var recyclerViewAdapter: MultipleImagesAdapter
-    private var useCases: UseCases = UseCases()
-    private var email: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,42 +44,15 @@ class NewPublicationFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sharedPref = SessionManager.getUserInfo(requireContext())
-        email = sharedPref["email"]!!
-
         setupSpinner()
         setupRecyclerView()
         setupImagePickers()
         setupListeners()
-    }
 
-    private fun validateFields(): Boolean {
-        val isTitleValid = binding.etTitle.text.toString().isNotEmpty()
-        val isDescriptionValid = binding.etDescription.text.toString().isNotEmpty()
-        val isInstructionsValid = binding.etInstructions.text.toString().isNotEmpty()
-        val isMainPhotoSet = binding.imageViewMainPhoto.drawable != null
-        val areImagesSelected = recyclerViewAdapter.itemCount > 0
+        observeViewModel()
 
-        return isTitleValid && isDescriptionValid && isInstructionsValid && isMainPhotoSet && areImagesSelected
-    }
-
-    private fun onPostButtonClick() {
-        if (validateFields()) {
-
-            val title = binding.etTitle.text.toString()
-            val description = binding.etDescription.text.toString()
-            val theme = binding.spinnerOptions.selectedItem.toString()
-            val instructions = binding.etInstructions.text.toString()
-            val mainPhoto = ImageUtils.bitmapToBase64(binding.imageViewMainPhoto.drawToBitmap())
-            val photos = recyclerViewAdapter.getImagesAsBase64(requireContext())
-
-            lifecycleScope.launch {
-                createPublication(email, title, theme, mainPhoto, description, instructions, photos)
-            }
-
-        } else {
-            SessionManager.showToast(requireContext(), R.string.fillFields)
-        }
+        val sharedPref = SessionManager.getUserInfo(requireContext())
+        viewModel.setUserEmail(sharedPref["email"] ?: "")
     }
 
     private fun setupSpinner() {
@@ -99,66 +73,69 @@ class NewPublicationFragment : Fragment() {
     }
 
     private fun setupImagePickers() {
-        val pickMedia =
+        val pickMainPhoto =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-                if (uri != null) {
-                    binding.imageViewMainPhoto.setImageURI(uri)
-                }
+                uri?.let { binding.imageViewMainPhoto.setImageURI(it) }
             }
 
-        val pickMedia2 =
+        val pickMultiplePhotos =
             registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
                 if (uris.isNotEmpty()) {
-                    val startIndex = imageUris.size
                     imageUris.clear()
-                    recyclerViewAdapter.notifyItemRangeRemoved(0, startIndex)
                     imageUris.addAll(uris)
-                    recyclerViewAdapter.notifyItemRangeInserted(0, uris.size)
+                    recyclerViewAdapter.notifyDataSetChanged()
                 }
             }
 
         binding.btnUploadImage.setOnClickListener {
-            pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            pickMainPhoto.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
 
         binding.btnUploadMultipleImages.setOnClickListener {
-            pickMedia2.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+            pickMultiplePhotos.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
     }
 
     private fun setupListeners() {
-        binding.btnPost.setOnClickListener { onPostButtonClick() }
+        binding.btnPost.setOnClickListener {
+            val title = binding.etTitle.text.toString()
+            val description = binding.etDescription.text.toString()
+            val theme = binding.spinnerOptions.selectedItem.toString()
+            val instructions = binding.etInstructions.text.toString()
+            val mainPhoto = ImageUtils.bitmapToBase64(binding.imageViewMainPhoto.drawToBitmap())
+            val photos = recyclerViewAdapter.getImagesAsBase64(requireContext())
+            lifecycleScope.launch {
+                viewModel.createPublication(
+                    title,
+                    description,
+                    theme,
+                    instructions,
+                    mainPhoto,
+                    photos
+                )
+            }
+        }
     }
 
-    private suspend fun createPublication(
-        email: String,
-        title: String,
-        theme: String,
-        photoMain: String,
-        description: String,
-        instructions: String,
-        photoProcess: List<String>
-    ) {
-        val response = useCases.createPublication(
-            email,
-            title,
-            theme,
-            photoMain,
-            description,
-            instructions,
-            photoProcess
-        )
-        if (response.message.isNotEmpty()) {
-            SessionManager.showToast(
-                requireContext(),
-                R.string.publicationCreated
-            )
-            findNavController().navigate(R.id.myPublicationsFragment)
-        } else {
-            SessionManager.showToast(
-                requireContext(),
-                R.string.error2
-            )
+    private fun observeViewModel() {
+        viewModel.isPublicationCreated.observe(viewLifecycleOwner) { success ->
+            if (success) {
+                SessionManager.showToast(requireContext(), R.string.publicationCreated)
+                findNavController().navigate(R.id.myPublicationsFragment)
+            } else {
+                SessionManager.showToast(requireContext(), R.string.error2)
+            }
         }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) { messageResId ->
+            messageResId?.let {
+                SessionManager.showToast(requireContext(), it)
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -5,96 +5,85 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.diyapp.R
 import com.example.diyapp.data.SessionManager
 import com.example.diyapp.databinding.FragmentLoginBinding
-import com.example.diyapp.domain.UseCases
+import com.example.diyapp.ui.viewmodel.LoginViewModel
 import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
+
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    private var useCases: UseCases = UseCases()
+    private val viewModel: LoginViewModel by viewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentLoginBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.loginSuccess.observe(viewLifecycleOwner) { isSuccess ->
+            if (isSuccess) {
+                saveUserSession()
+                findNavController().navigate(R.id.exploreFragment)
+            } else {
+                SessionManager.showToast(requireContext(), R.string.wrongCredentials)
+            }
+        }
+
         binding.registerButton.setOnClickListener {
             findNavController().navigate(
                 LoginFragmentDirections.actionLoginFragmentToRegisterAccountActivity()
             )
         }
+
         binding.loginButton.setOnClickListener {
             validateLogin()
         }
     }
 
-    private fun validateLogin(): Boolean {
-
+    private fun validateLogin() {
         val email = binding.emailEditText.text.toString().trim()
         val password = binding.passwordEditText.text.toString().trim()
 
-        return when {
-            email.isEmpty() -> {
-                SessionManager.showToast(requireContext(), R.string.fillFields)
-                false
-            }
+        if (email.isEmpty() || password.isEmpty()) {
+            SessionManager.showToast(requireContext(), R.string.fillFields)
+            return
+        }
 
-            password.isEmpty() -> {
-                SessionManager.showToast(requireContext(), R.string.fillFields)
-                false
-            }
-
-            else -> {
-                lifecycleScope.launch {
-                    validateUser(email, password)
-                }
-                true
-            }
+        lifecycleScope.launch {
+            viewModel.validateUser(email, password)
         }
     }
 
-    private suspend fun validateUser(
-        email: String,
-        password: String
-    ) {
-        val response = useCases.getUser(email)
-        if (response.isNotEmpty()) {
-            if (response[0].password == password) {
-                SessionManager.showToast(
-                    requireContext(),
-                    R.string.loginSuccessful
-                )
-                SessionManager.setUserLoggedIn(
-                    requireContext(),
-                    true,
-                    response[0].email,
-                    response[0].name,
-                    response[0].lastname,
-                    response[0].password,
-                    response[0].userPhoto
-                )
-                findNavController().navigate(R.id.exploreFragment)
-            } else {
-                SessionManager.showToast(
-                    requireContext(),
-                    R.string.wrongCredentials
-                )
-            }
-        } else {
-            SessionManager.showToast(
+    private fun saveUserSession() {
+        lifecycleScope.launch {
+            val email = binding.emailEditText.text.toString().trim()
+            val user = viewModel.getUserData(email)
+            SessionManager.setUserLoggedIn(
                 requireContext(),
-                R.string.wrongCredentials
+                true,
+                user.email,
+                user.name,
+                user.lastname,
+                user.password,
+                user.userPhoto
             )
+            SessionManager.showToast(requireContext(), R.string.loginSuccessful)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

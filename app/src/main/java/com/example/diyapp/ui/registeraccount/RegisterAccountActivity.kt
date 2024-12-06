@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
 import androidx.lifecycle.lifecycleScope
@@ -11,20 +12,27 @@ import com.example.diyapp.R
 import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.databinding.ActivityRegisterAccountBinding
-import com.example.diyapp.domain.UseCases
+import com.example.diyapp.ui.viewmodel.RegisterAccountViewModel
 import kotlinx.coroutines.launch
 
 class RegisterAccountActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterAccountBinding
     private var imageSet = false
-    private var useCases: UseCases = UseCases()
+    private val viewModel: RegisterAccountViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityRegisterAccountBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupImagePicker()
+        setupListeners()
+        observeViewModel()
+    }
+
+    private fun setupImagePicker() {
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
@@ -36,88 +44,46 @@ class RegisterAccountActivity : AppCompatActivity() {
         binding.changePhotoButton.setOnClickListener {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
+    }
 
+    private fun setupListeners() {
         binding.registerButton.setOnClickListener {
-            validateFields()
-        }
+            val email = binding.mailEditText.text.toString().trim()
+            val name = binding.nameEditText.text.toString().trim()
+            val lastname = binding.lastNameEditText.text.toString().trim()
+            val password = binding.passwordEditText.text.toString().trim()
+            val confirmPassword = binding.confirmPasswordEditText.text.toString().trim()
 
-    }
-
-    private fun validateFields(): Boolean {
-
-        val email = binding.mailEditText.text.toString().trim()
-        val name = binding.nameEditText.text.toString().trim()
-        val lastname = binding.lastNameEditText.text.toString().trim()
-        val password = binding.passwordEditText.text.toString().trim()
-        val confirmPassword = binding.confirmPasswordEditText.text.toString().trim()
-        val image = binding.profileImageView.drawToBitmap()
-        val imageBlob = ImageUtils.bitmapToBase64(image)
-
-        return when {
-
-            email.isEmpty() || name.isEmpty() || lastname.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || !imageSet -> {
-                SessionManager.showToast(this, R.string.fillFields)
-                false
+            val imageBlob = if (imageSet) {
+                ImageUtils.bitmapToBase64(binding.profileImageView.drawToBitmap())
+            } else {
+                null
             }
-
-            !SessionManager.validateInputs(this, email, password) -> {
-                false
-            }
-
-            password != confirmPassword -> {
-                SessionManager.showToast(this, R.string.differentPasswords)
-                false
-            }
-
-            else -> {
-                lifecycleScope.launch {
-                    validateUser(email, name, lastname, password, imageBlob)
-                }
-                true
+            lifecycleScope.launch {
+                viewModel.registerAccount(
+                    email,
+                    name,
+                    lastname,
+                    password,
+                    confirmPassword,
+                    imageBlob
+                )
             }
         }
     }
 
-    private suspend fun validateUser(
-        email: String,
-        name: String,
-        lastname: String,
-        password: String,
-        imageBlob: String
-    ) {
-        val response = useCases.getUser(email)
-        if (response.isEmpty()) {
-            registerUser(email, name, lastname, password, imageBlob)
-            finish()
-        } else {
-            SessionManager.showToast(this, R.string.userAlreadyExists)
+    private fun observeViewModel() {
+        viewModel.errorMessage.observe(this) { messageResId ->
+            messageResId?.let {
+                SessionManager.showToast(this, it)
+            }
         }
-    }
 
-    private suspend fun registerUser(
-        email: String,
-        name: String,
-        lastname: String,
-        password: String,
-        userPhoto: String
-    ) {
-        val response = useCases.registerUser(
-            email,
-            name,
-            lastname,
-            password,
-            userPhoto
-        )
-        if (response.message.isNotEmpty()) {
-            SessionManager.showToast(
-                this,
-                R.string.userCreated
-            )
-        } else {
-            SessionManager.showToast(
-                this,
-                R.string.error2
-            )
+        viewModel.isUserRegistered.observe(this) { isRegistered ->
+            if (isRegistered) {
+                SessionManager.showToast(this, R.string.userCreated)
+                finish()
+            }
         }
     }
 }
