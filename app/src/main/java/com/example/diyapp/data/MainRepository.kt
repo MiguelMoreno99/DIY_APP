@@ -8,6 +8,7 @@ import com.example.diyapp.data.adapter.favorites.FeedFavorites
 import com.example.diyapp.data.adapter.favorites.FeedFavoritesProvider
 import com.example.diyapp.data.adapter.user.User
 import com.example.diyapp.data.adapter.user.UserProvider
+import com.example.diyapp.data.database.daos.CreationsDao
 import com.example.diyapp.domain.RetrofitManager
 import com.example.diyapp.domain.ServerResponse
 
