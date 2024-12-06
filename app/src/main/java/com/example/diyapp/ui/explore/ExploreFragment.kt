@@ -1,8 +1,6 @@
 package com.example.diyapp.ui.explore
 
-import com.example.diyapp.domain.RetrofitManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,16 +9,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diyapp.R
+import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.explore.FeedExploreAdapter
 import com.example.diyapp.data.adapter.explore.FeedExploreProvider
-import com.example.diyapp.data.SessionManager
 import com.example.diyapp.databinding.FragmentExploreBinding
-import com.example.diyapp.domain.APIService
 import com.example.diyapp.domain.UseCases
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ExploreFragment : Fragment() {
     private var _binding: FragmentExploreBinding? = null
