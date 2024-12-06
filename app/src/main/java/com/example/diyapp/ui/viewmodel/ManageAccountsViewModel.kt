@@ -2,10 +2,13 @@ package com.example.diyapp.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.diyapp.domain.UseCases
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ManageAccountsViewModel : ViewModel() {
-
-    private val useCases = UseCases()
+@HiltViewModel
+class ManageAccountsViewModel @Inject constructor(
+    val useCases: UseCases
+) : ViewModel() {
 
     suspend fun updateUser(
         email: String,

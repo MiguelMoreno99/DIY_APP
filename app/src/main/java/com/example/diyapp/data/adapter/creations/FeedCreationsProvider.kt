@@ -1,7 +1,9 @@
 package com.example.diyapp.data.adapter.creations
 
-class FeedCreationsProvider {
-    companion object {
-        var feedCreationsList: List<FeedCreations> = listOf()
-    }
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class FeedCreationsProvider @Inject constructor() {
+    var feedCreationsList: List<FeedCreations> = emptyList()
 }

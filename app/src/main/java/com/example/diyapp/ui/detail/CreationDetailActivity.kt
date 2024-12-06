@@ -21,7 +21,10 @@ import com.example.diyapp.data.adapter.creations.FeedCreations
 import com.example.diyapp.data.adapter.explore.InstructionsAdapter
 import com.example.diyapp.databinding.ActivityCreationDetailBinding
 import com.example.diyapp.ui.viewmodel.CreationDetailViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CreationDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCreationDetailBinding
@@ -30,6 +33,9 @@ class CreationDetailActivity : AppCompatActivity() {
     private lateinit var email: String
     private val imageUris = mutableListOf<Uri>()
     private lateinit var recyclerViewAdapter: MultipleImagesAdapter
+
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +52,7 @@ class CreationDetailActivity : AppCompatActivity() {
         args = CreationDetailActivityArgs.fromBundle(intent.extras!!)
         val item = args.feedCreationItem
 
-        email = SessionManager.getUserInfo(this)["email"]!!
+        email = sessionManager.getUserInfo(this)["email"]!!
 
         setUpCategorySpinner(item.theme)
         binding.apply {
@@ -132,7 +138,7 @@ class CreationDetailActivity : AppCompatActivity() {
         val photos = recyclerViewAdapter.getImagesAsBase64(this)
 
         if (title.isBlank() || description.isBlank() || instructions.isBlank()) {
-            SessionManager.showToast(this, R.string.fillFields)
+            sessionManager.showToast(this, R.string.fillFields)
         } else {
             viewModel.editPublication(
                 item.idPublication,
@@ -151,16 +157,16 @@ class CreationDetailActivity : AppCompatActivity() {
         viewModel.operationResult.observe(this) { result ->
             when (result) {
                 "PublicationDeleted" -> {
-                    SessionManager.showToast(this, R.string.publicationDeleted)
+                    sessionManager.showToast(this, R.string.publicationDeleted)
                     finish()
                 }
 
                 "PublicationEdited" -> {
-                    SessionManager.showToast(this, R.string.publicationEdited)
+                    sessionManager.showToast(this, R.string.publicationEdited)
                     finish()
                 }
 
-                "Error" -> SessionManager.showToast(this, R.string.error2)
+                "Error" -> sessionManager.showToast(this, R.string.error2)
             }
         }
 

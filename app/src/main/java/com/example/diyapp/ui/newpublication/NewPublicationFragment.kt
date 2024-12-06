@@ -21,12 +21,18 @@ import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.data.adapter.create.MultipleImagesAdapter
 import com.example.diyapp.databinding.FragmentNewPublicationBinding
 import com.example.diyapp.ui.viewmodel.NewPublicationViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class NewPublicationFragment : Fragment() {
 
     private var _binding: FragmentNewPublicationBinding? = null
     private val binding get() = _binding!!
+
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     private val viewModel: NewPublicationViewModel by viewModels()
     private val imageUris = mutableListOf<Uri>()
@@ -51,7 +57,7 @@ class NewPublicationFragment : Fragment() {
 
         observeViewModel()
 
-        val sharedPref = SessionManager.getUserInfo(requireContext())
+        val sharedPref = sessionManager.getUserInfo(requireContext())
         viewModel.setUserEmail(sharedPref["email"] ?: "")
     }
 
@@ -121,16 +127,16 @@ class NewPublicationFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.isPublicationCreated.observe(viewLifecycleOwner) { success ->
             if (success) {
-                SessionManager.showToast(requireContext(), R.string.publicationCreated)
+                sessionManager.showToast(requireContext(), R.string.publicationCreated)
                 findNavController().navigate(R.id.myPublicationsFragment)
             } else {
-                SessionManager.showToast(requireContext(), R.string.error2)
+                sessionManager.showToast(requireContext(), R.string.error2)
             }
         }
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { messageResId ->
             messageResId?.let {
-                SessionManager.showToast(requireContext(), it)
+                sessionManager.showToast(requireContext(), it)
             }
         }
     }

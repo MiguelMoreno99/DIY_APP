@@ -4,10 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.diyapp.data.adapter.user.User
 import com.example.diyapp.domain.UseCases
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    val useCases: UseCases
+) : ViewModel() {
 
-    val useCases = UseCases()
     val loginSuccess = MutableLiveData<Boolean>()
 
     suspend fun validateUser(email: String, password: String) {

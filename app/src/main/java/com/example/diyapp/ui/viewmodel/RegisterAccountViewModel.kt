@@ -4,10 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.diyapp.R
 import com.example.diyapp.domain.UseCases
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class RegisterAccountViewModel : ViewModel() {
+@HiltViewModel
+class RegisterAccountViewModel @Inject constructor(
+    val useCases: UseCases
+) : ViewModel() {
 
-    val useCases = UseCases()
     val errorMessage = MutableLiveData<Int?>()
     val isUserRegistered = MutableLiveData<Boolean>()
 

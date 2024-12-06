@@ -1,7 +1,9 @@
 package com.example.diyapp.data.adapter.favorites
 
-class FeedFavoritesProvider {
-    companion object {
-        var feedFavoritesList: List<FeedFavorites> = listOf()
-    }
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class FeedFavoritesProvider @Inject constructor() {
+    var feedFavoritesList: List<FeedFavorites> = emptyList()
 }

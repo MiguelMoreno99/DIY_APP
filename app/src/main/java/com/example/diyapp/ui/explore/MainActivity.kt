@@ -10,11 +10,17 @@ import com.example.diyapp.R
 import com.example.diyapp.data.SessionManager
 import com.example.diyapp.databinding.ActivityMainBinding
 import com.example.diyapp.ui.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val viewModel: MainViewModel by viewModels()
+
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,14 +69,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateWithLoginCheck(destinationIfLoggedIn: Int, destinationIfNotLoggedIn: Int) {
-        val isLoggedIn = SessionManager.isUserLoggedIn(this)
+        val isLoggedIn = sessionManager.isUserLoggedIn(this)
         viewModel.checkLoginAndNavigate(isLoggedIn, destinationIfLoggedIn, destinationIfNotLoggedIn)
     }
 
     private fun setupObservers() {
         viewModel.navigationCommand.observe(this) { (destination, showToast) ->
             if (showToast) {
-                SessionManager.showToast(this, R.string.loginFirst)
+                sessionManager.showToast(this, R.string.loginFirst)
             }
             navController.navigate(destination)
         }

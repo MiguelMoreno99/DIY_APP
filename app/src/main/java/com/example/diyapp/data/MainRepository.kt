@@ -10,32 +10,37 @@ import com.example.diyapp.data.adapter.user.User
 import com.example.diyapp.data.adapter.user.UserProvider
 import com.example.diyapp.domain.RetrofitManager
 import com.example.diyapp.domain.ServerResponse
+import javax.inject.Inject
 
-class MainRepository {
-
-    private val api = RetrofitManager()
+class MainRepository @Inject constructor(
+    private val retrofitManager: RetrofitManager,
+    private val feedCreationsProvider: FeedCreationsProvider,
+    private val feedFavoritesProvider: FeedFavoritesProvider,
+    private val feedExploreProvider: FeedExploreProvider,
+    private val userProvider: UserProvider
+) {
 
     suspend fun getFeedExplore(): List<FeedExplore> {
-        val response = api.getFeedExplore()
-        FeedExploreProvider.feedExploreList = response
+        val response = retrofitManager.getFeedExplore()
+        feedExploreProvider.feedExploreList = response
         return response
     }
 
     suspend fun getFeedFavorite(email: String): List<FeedFavorites> {
-        val response = api.getFeedFavorite(email)
-        FeedFavoritesProvider.feedFavoritesList = response
+        val response = retrofitManager.getFeedFavorite(email)
+        feedFavoritesProvider.feedFavoritesList = response
         return response
     }
 
     suspend fun getFeedCreations(email: String): List<FeedCreations> {
-        val response = api.getFeedCreations(email)
-        FeedCreationsProvider.feedCreationsList = response
+        val response = retrofitManager.getFeedCreations(email)
+        feedCreationsProvider.feedCreationsList = response
         return response
     }
 
     suspend fun getUser(email: String): List<User> {
-        val response = api.getUser(email)
-        UserProvider.UserData = response
+        val response = retrofitManager.getUser(email)
+        userProvider.userData = response
         return response
     }
 
@@ -46,8 +51,8 @@ class MainRepository {
         password: String,
         userPhoto: String
     ): List<User> {
-        val response = api.editUser(email, name, lastname, password, userPhoto)
-        UserProvider.UserData = response
+        val response = retrofitManager.editUser(email, name, lastname, password, userPhoto)
+        userProvider.userData = response
         return response
     }
 
@@ -58,7 +63,7 @@ class MainRepository {
         password: String,
         userPhoto: String
     ): ServerResponse {
-        val response = api.registerUser(email, name, lastname, password, userPhoto)
+        val response = retrofitManager.registerUser(email, name, lastname, password, userPhoto)
         return response
     }
 
@@ -71,7 +76,7 @@ class MainRepository {
         instructions: String,
         photoProcess: List<String>
     ): ServerResponse {
-        val response = api.createPublication(
+        val response = retrofitManager.createPublication(
             email,
             title,
             theme,
@@ -93,7 +98,7 @@ class MainRepository {
         instructions: String,
         photoProcess: List<String>
     ): ServerResponse {
-        val response = api.editPublication(
+        val response = retrofitManager.editPublication(
             idPublication,
             email,
             title,
@@ -107,17 +112,17 @@ class MainRepository {
     }
 
     suspend fun deletePublication(idPublication: Int, email: String): ServerResponse {
-        val response = api.deletePublication(idPublication, email)
+        val response = retrofitManager.deletePublication(idPublication, email)
         return response
     }
 
     suspend fun removeFavorite(idPublication: Int, email: String): ServerResponse {
-        val response = api.removeFavorite(idPublication, email)
+        val response = retrofitManager.removeFavorite(idPublication, email)
         return response
     }
 
     suspend fun addFavoritePublication(idPublication: Int, email: String): ServerResponse {
-        val response = api.addFavoritePublication(idPublication, email)
+        val response = retrofitManager.addFavoritePublication(idPublication, email)
         return response
     }
 }

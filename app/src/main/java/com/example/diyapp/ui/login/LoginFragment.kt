@@ -12,13 +12,19 @@ import com.example.diyapp.R
 import com.example.diyapp.data.SessionManager
 import com.example.diyapp.databinding.FragmentLoginBinding
 import com.example.diyapp.ui.viewmodel.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private val viewModel: LoginViewModel by viewModels()
+
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +42,7 @@ class LoginFragment : Fragment() {
                 saveUserSession()
                 findNavController().navigate(R.id.exploreFragment)
             } else {
-                SessionManager.showToast(requireContext(), R.string.wrongCredentials)
+                sessionManager.showToast(requireContext(), R.string.wrongCredentials)
             }
         }
 
@@ -56,7 +62,7 @@ class LoginFragment : Fragment() {
         val password = binding.passwordEditText.text.toString().trim()
 
         if (email.isEmpty() || password.isEmpty()) {
-            SessionManager.showToast(requireContext(), R.string.fillFields)
+            sessionManager.showToast(requireContext(), R.string.fillFields)
             return
         }
 
@@ -69,7 +75,7 @@ class LoginFragment : Fragment() {
         lifecycleScope.launch {
             val email = binding.emailEditText.text.toString().trim()
             val user = viewModel.getUserData(email)
-            SessionManager.setUserLoggedIn(
+            sessionManager.setUserLoggedIn(
                 requireContext(),
                 true,
                 user.email,
@@ -78,7 +84,7 @@ class LoginFragment : Fragment() {
                 user.password,
                 user.userPhoto
             )
-            SessionManager.showToast(requireContext(), R.string.loginSuccessful)
+            sessionManager.showToast(requireContext(), R.string.loginSuccessful)
         }
     }
 

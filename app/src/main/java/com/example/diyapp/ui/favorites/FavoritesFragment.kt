@@ -14,8 +14,11 @@ import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.favorites.FeedFavoritesAdapter
 import com.example.diyapp.databinding.FragmentFavoritesBinding
 import com.example.diyapp.ui.viewmodel.FavoriteViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FavoritesFragment : Fragment() {
 
     private var _binding: FragmentFavoritesBinding? = null
@@ -23,6 +26,9 @@ class FavoritesFragment : Fragment() {
     private lateinit var adapter: FeedFavoritesAdapter
     private val viewModel: FavoriteViewModel by viewModels()
     private lateinit var email: String
+
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -35,7 +41,7 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        email = SessionManager.getUserInfo(requireContext())["email"]!!
+        email = sessionManager.getUserInfo(requireContext())["email"]!!
 
         setupRecyclerView()
         setupObservers()
@@ -73,7 +79,7 @@ class FavoritesFragment : Fragment() {
 
         viewModel.emptyState.observe(viewLifecycleOwner) { isEmpty ->
             if (isEmpty) {
-                SessionManager.showToast(requireContext(), R.string.notHaveFavorites)
+                sessionManager.showToast(requireContext(), R.string.notHaveFavorites)
                 adapter.deleteData()
             }
         }

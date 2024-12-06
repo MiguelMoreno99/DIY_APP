@@ -3,15 +3,16 @@ package com.example.diyapp.data
 import android.content.Context
 import android.widget.Toast
 import com.example.diyapp.R
+import javax.inject.Inject
 
-object SessionManager {
-    private const val PREF_NAME = "AppPreferences"
-    private const val KEY_IS_LOGGED_IN = "isLoggedIn"
-    private const val KEY_EMAIL = "email"
-    private const val KEY_NAME = "name"
-    private const val KEY_LASTNAME = "lastname"
-    private const val KEY_PASSWORD = "password"
-    private const val KEY_PHOTO = "photo"
+class SessionManager @Inject constructor(){
+    private val PREF_NAME = "AppPreferences"
+    private val KEY_IS_LOGGED_IN = "isLoggedIn"
+    private val KEY_EMAIL = "email"
+    private val KEY_NAME = "name"
+    private val KEY_LASTNAME = "lastname"
+    private val KEY_PASSWORD = "password"
+    private val KEY_PHOTO = "photo"
 
     fun isUserLoggedIn(context: Context): Boolean {
         val sharedPref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)

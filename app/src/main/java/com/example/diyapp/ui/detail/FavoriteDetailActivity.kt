@@ -11,12 +11,18 @@ import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.data.adapter.explore.InstructionsAdapter
 import com.example.diyapp.databinding.ActivityFavoriteDetailBinding
 import com.example.diyapp.ui.viewmodel.FavoriteDetailViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class FavoriteDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFavoriteDetailBinding
     private val viewModel: FavoriteDetailViewModel by viewModels()
     private lateinit var args: FavoriteDetailActivityArgs
+
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,16 +57,16 @@ class FavoriteDetailActivity : AppCompatActivity() {
         }
         viewModel.isFavoriteRemoved.observe(this) { isRemoved ->
             if (isRemoved) {
-                SessionManager.showToast(this, R.string.removeFavorite)
+                sessionManager.showToast(this, R.string.removeFavorite)
                 finish()
             } else {
-                SessionManager.showToast(this, R.string.error2)
+                sessionManager.showToast(this, R.string.error2)
             }
         }
     }
 
     private fun getEmailFromSession(): String {
-        val sharedPref = SessionManager.getUserInfo(this)
+        val sharedPref = sessionManager.getUserInfo(this)
         return sharedPref["email"] ?: ""
     }
 }

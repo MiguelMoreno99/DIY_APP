@@ -4,10 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.diyapp.R
 import com.example.diyapp.domain.UseCases
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class NewPublicationViewModel : ViewModel() {
+@HiltViewModel
+class NewPublicationViewModel @Inject constructor(
+    val useCases: UseCases
+) : ViewModel() {
 
-    val useCases = UseCases()
     var email: String = ""
     val isPublicationCreated = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<Int?>()
