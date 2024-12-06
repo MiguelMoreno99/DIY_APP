@@ -1,20 +1,16 @@
 package com.example.diyapp.ui.detail
 
-import RetrofitManager
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diyapp.R
+import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.data.adapter.explore.InstructionsAdapter
-import com.example.diyapp.data.adapter.response.IdResponse
-import com.example.diyapp.data.adapter.response.ServerResponse
-import com.example.diyapp.data.adapter.user.SessionManager
 import com.example.diyapp.databinding.ActivityPublicationDetailBinding
-import com.example.diyapp.domain.APIService
+import com.example.diyapp.domain.UseCases
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,6 +19,8 @@ class PublicationDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPublicationDetailBinding
     private lateinit var args: PublicationDetailActivityArgs
+    private var useCases: UseCases = UseCases()
+    private var email: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -34,6 +32,9 @@ class PublicationDetailActivity : AppCompatActivity() {
     private fun loadPublicationInfo() {
         args = PublicationDetailActivityArgs.fromBundle(intent.extras!!)
         val item = args.feedPublicationItem
+
+        val sharedPref = SessionManager.getUserInfo(this)
+        email = sharedPref["email"]!!
 
         binding.apply {
             textViewTitle.text = item.title
@@ -60,47 +61,29 @@ class PublicationDetailActivity : AppCompatActivity() {
 
     private fun handleAddToFavorites(idPublication: Int) {
         if (SessionManager.isUserLoggedIn(this)) {
-            addFavoritePublication(idPublication)
+            lifecycleScope.launch {
+                addFavoritePublication(idPublication, email)
+            }
         } else {
             SessionManager.showToast(this, R.string.loginRequired)
         }
     }
 
-    private fun addFavoritePublication(id: Int) {
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val sharedPref = SessionManager.getUserInfo(this@PublicationDetailActivity)
-                val email = sharedPref["email"]
-                val idResponse = IdResponse(id, email!!)
-                val call = RetrofitManager.getRetroFit().create(APIService::class.java)
-                    .addToFavorites(idResponse)
-
-                val responseBody: ServerResponse = call.body()!!
-
-                withContext(Dispatchers.Main) {
-
-                    if (call.isSuccessful) {
-                        if (responseBody.message.isNotEmpty()) {
-                            SessionManager.showToast(
-                                this@PublicationDetailActivity,
-                                R.string.addedToFavorites
-                            )
-                            withContext(Dispatchers.Main) {
-                                finish()
-                            }
-                        }
-                    } else {
-                        SessionManager.showToast(this@PublicationDetailActivity, R.string.error2)
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    SessionManager.showToast(this@PublicationDetailActivity, R.string.error)
-                }
-                Log.e("API Error", "Error: ${e.message}")
+    private suspend fun addFavoritePublication(idPublication: Int, email: String) {
+        val response = useCases.addFavoritePublication(idPublication, email)
+        if (response.message.isNotEmpty()) {
+            SessionManager.showToast(
+                this,
+                R.string.addedToFavorites
+            )
+            withContext(Dispatchers.Main) {
+                finish()
             }
+        } else {
+            SessionManager.showToast(
+                this,
+                R.string.error2
+            )
         }
     }
-
 }

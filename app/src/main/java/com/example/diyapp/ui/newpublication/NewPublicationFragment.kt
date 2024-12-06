@@ -1,10 +1,8 @@
 package com.example.diyapp.ui.newpublication
 
-import RetrofitManager
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,16 +15,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diyapp.R
+import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.data.adapter.create.MultipleImagesAdapter
-import com.example.diyapp.data.adapter.response.ServerResponse
-import com.example.diyapp.data.adapter.response.UserNewPublication
-import com.example.diyapp.data.adapter.user.SessionManager
 import com.example.diyapp.databinding.FragmentNewPublicationBinding
-import com.example.diyapp.domain.APIService
-import kotlinx.coroutines.Dispatchers
+import com.example.diyapp.domain.UseCases
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class NewPublicationFragment : Fragment() {
 
@@ -34,6 +28,8 @@ class NewPublicationFragment : Fragment() {
     private val binding get() = _binding!!
     private val imageUris = mutableListOf<Uri>()
     private lateinit var recyclerViewAdapter: MultipleImagesAdapter
+    private var useCases: UseCases = UseCases()
+    private var email: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +42,9 @@ class NewPublicationFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val sharedPref = SessionManager.getUserInfo(requireContext())
+        email = sharedPref["email"]!!
 
         setupSpinner()
         setupRecyclerView()
@@ -73,7 +72,9 @@ class NewPublicationFragment : Fragment() {
             val mainPhoto = ImageUtils.bitmapToBase64(binding.imageViewMainPhoto.drawToBitmap())
             val photos = recyclerViewAdapter.getImagesAsBase64(requireContext())
 
-            createPublication(title, theme, mainPhoto, description, instructions, photos)
+            lifecycleScope.launch {
+                createPublication(email, title, theme, mainPhoto, description, instructions, photos)
+            }
 
         } else {
             SessionManager.showToast(requireContext(), R.string.fillFields)
@@ -129,7 +130,8 @@ class NewPublicationFragment : Fragment() {
         binding.btnPost.setOnClickListener { onPostButtonClick() }
     }
 
-    private fun createPublication(
+    private suspend fun createPublication(
+        email: String,
         title: String,
         theme: String,
         photoMain: String,
@@ -137,45 +139,26 @@ class NewPublicationFragment : Fragment() {
         instructions: String,
         photoProcess: List<String>
     ) {
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val sharedPref = SessionManager.getUserInfo(requireContext())
-                val email = sharedPref["email"]
-                val creation = UserNewPublication(
-                    email!!,
-                    title,
-                    theme,
-                    photoMain,
-                    instructions,
-                    description,
-                    0,
-                    photoProcess
-                )
-                val call = RetrofitManager.getRetroFit().create(APIService::class.java)
-                    .createPublication(creation)
-
-                val responseBody: ServerResponse = call.body()!!
-
-                withContext(Dispatchers.Main) {
-
-                    if (call.isSuccessful) {
-                        if (responseBody.message.isNotEmpty()) {
-                            SessionManager.showToast(requireContext(), R.string.publicationCreated)
-                            withContext(Dispatchers.Main) {
-                                findNavController().navigate(R.id.myPublicationsFragment)
-                            }
-                        }
-                    } else {
-                        SessionManager.showToast(requireContext(), R.string.error2)
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    SessionManager.showToast(requireContext(), R.string.error)
-                }
-                Log.e("API Error", "Error: ${e.message}")
-            }
+        val response = useCases.createPublication(
+            email,
+            title,
+            theme,
+            photoMain,
+            description,
+            instructions,
+            photoProcess
+        )
+        if (response.message.isNotEmpty()) {
+            SessionManager.showToast(
+                requireContext(),
+                R.string.publicationCreated
+            )
+            findNavController().navigate(R.id.myPublicationsFragment)
+        } else {
+            SessionManager.showToast(
+                requireContext(),
+                R.string.error2
+            )
         }
     }
 }

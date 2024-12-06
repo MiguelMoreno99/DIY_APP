@@ -1,8 +1,6 @@
 package com.example.diyapp.ui.manageaccount
 
-import RetrofitManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,18 +11,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.diyapp.R
+import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.create.ImageUtils
-import com.example.diyapp.data.adapter.user.SessionManager
-import com.example.diyapp.data.adapter.user.User
 import com.example.diyapp.databinding.FragmentManageAccountsBinding
-import com.example.diyapp.domain.APIService
-import kotlinx.coroutines.Dispatchers
+import com.example.diyapp.domain.UseCases
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ManageAccountsFragment : Fragment() {
     private var _binding: FragmentManageAccountsBinding? = null
     private val binding get() = _binding!!
+    private var useCases: UseCases = UseCases()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -96,17 +92,21 @@ class ManageAccountsFragment : Fragment() {
 
             else -> {
                 if (newPassword.isBlank()) {
-                    editUser(
-                        user["email"].toString(),
-                        name,
-                        lastname,
-                        user["password"].toString(),
-                        photo
-                    )
+                    lifecycleScope.launch {
+                        editUser(
+                            user["email"].toString(),
+                            name,
+                            lastname,
+                            user["password"].toString(),
+                            photo
+                        )
+                    }
                     navigateToExploreFragment()
                     return true
                 } else if (SessionManager.isValidPassword(newPassword)) {
-                    editUser(user["email"].toString(), name, lastname, newPassword, photo)
+                    lifecycleScope.launch {
+                        editUser(user["email"].toString(), name, lastname, newPassword, photo)
+                    }
                     navigateToExploreFragment()
                     return true
                 } else {
@@ -121,45 +121,39 @@ class ManageAccountsFragment : Fragment() {
         findNavController().navigate(R.id.exploreFragment)
     }
 
-    private fun editUser(
+    private suspend fun editUser(
         email: String,
         name: String,
         lastname: String,
         password: String,
         userPhoto: String
     ) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val user = User(
-                    email,
-                    name,
-                    lastname,
-                    password,
-                    userPhoto
-                )
-                val call = RetrofitManager.getRetroFit().create(APIService::class.java)
-                    .modifyUser(user)
-                val responseBody: List<User> = call.body()!!
-                withContext(Dispatchers.Main) {
-
-                    if (call.isSuccessful) {
-                        if (responseBody.isNotEmpty()) {
-                            SessionManager.showToast(
-                                requireContext(),
-                                R.string.userUpdated
-                            )
-                            SessionManager.setUserLoggedIn(requireContext(),true,email,name,lastname,password,userPhoto)
-                        }
-                    } else {
-                        SessionManager.showToast(requireContext(), R.string.error2)
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    SessionManager.showToast(requireContext(), R.string.error)
-                }
-                Log.e("API Error", "Error: ${e.message}")
-            }
+        val response = useCases.editUser(
+            email,
+            name,
+            lastname,
+            password,
+            userPhoto
+        )
+        if (response.isNotEmpty()) {
+            SessionManager.showToast(
+                requireContext(),
+                R.string.userUpdated
+            )
+            SessionManager.setUserLoggedIn(
+                requireContext(),
+                true,
+                email,
+                name,
+                lastname,
+                password,
+                userPhoto
+            )
+        } else {
+            SessionManager.showToast(
+                requireContext(),
+                R.string.error2
+            )
         }
     }
 }

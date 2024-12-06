@@ -1,4 +1,4 @@
-package com.example.diyapp.data.adapter.user
+package com.example.diyapp.data
 
 import android.content.Context
 import android.widget.Toast

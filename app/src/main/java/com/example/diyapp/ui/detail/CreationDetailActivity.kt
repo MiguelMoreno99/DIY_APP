@@ -1,10 +1,8 @@
 package com.example.diyapp.ui.detail
 
-import RetrofitManager
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.activity.enableEdgeToEdge
@@ -15,16 +13,13 @@ import androidx.core.view.drawToBitmap
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diyapp.R
+import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.data.adapter.create.MultipleImagesAdapter
 import com.example.diyapp.data.adapter.creations.FeedCreations
 import com.example.diyapp.data.adapter.explore.InstructionsAdapter
-import com.example.diyapp.data.adapter.response.IdResponse
-import com.example.diyapp.data.adapter.response.ServerResponse
-import com.example.diyapp.data.adapter.response.UserEditPublication
-import com.example.diyapp.data.adapter.user.SessionManager
 import com.example.diyapp.databinding.ActivityCreationDetailBinding
-import com.example.diyapp.domain.APIService
+import com.example.diyapp.domain.UseCases
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -35,6 +30,8 @@ class CreationDetailActivity : AppCompatActivity() {
     private lateinit var args: CreationDetailActivityArgs
     private val imageUris = mutableListOf<Uri>()
     private lateinit var recyclerViewAdapter: MultipleImagesAdapter
+    private var useCases: UseCases = UseCases()
+    private var email: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -45,9 +42,12 @@ class CreationDetailActivity : AppCompatActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun loadPublicationInfo() {
-
         args = CreationDetailActivityArgs.fromBundle(intent.extras!!)
         val item = args.feedCreationItem
+
+        val sharedPref = SessionManager.getUserInfo(this)
+        email = sharedPref["email"]!!
+
         setUpCategorySpinner()
         binding.apply {
             editTextTitle.setText(item.title)
@@ -59,14 +59,24 @@ class CreationDetailActivity : AppCompatActivity() {
             binding.recyclerViewInstructionPhotos.apply {
                 adapter = recyclerViewAdapter
                 layoutManager =
-                    LinearLayoutManager(this@CreationDetailActivity, LinearLayoutManager.HORIZONTAL, false)
+                    LinearLayoutManager(
+                        this@CreationDetailActivity,
+                        LinearLayoutManager.HORIZONTAL,
+                        false
+                    )
             }
             recyclerViewInstructionPhotos.adapter = InstructionsAdapter(item.photoProcess)
 
             setUpImagePickers()
-
             buttonEditPublication.setOnClickListener { validateFields(item) }
-            buttonDeletePublication.setOnClickListener { deletePublication(item.idPublication) }
+            buttonDeletePublication.setOnClickListener {
+                lifecycleScope.launch {
+                    deletePublication(
+                        item.idPublication,
+                        email
+                    )
+                }
+            }
         }
     }
 
@@ -104,7 +114,10 @@ class CreationDetailActivity : AppCompatActivity() {
                 if (uris.isNotEmpty()) {
                     val startIndex = binding.recyclerViewInstructionPhotos.adapter!!.itemCount
                     imageUris.clear()
-                    binding.recyclerViewInstructionPhotos.adapter!!.notifyItemRangeRemoved(0,startIndex)
+                    binding.recyclerViewInstructionPhotos.adapter!!.notifyItemRangeRemoved(
+                        0,
+                        startIndex
+                    )
                     imageUris.addAll(uris)
                     binding.recyclerViewInstructionPhotos.adapter = MultipleImagesAdapter(imageUris)
                 }
@@ -133,58 +146,43 @@ class CreationDetailActivity : AppCompatActivity() {
             }
 
             else -> {
-                editPublication(
-                    item.idPublication,
-                    title,
-                    category,
-                    mainPhoto,
-                    description,
-                    instructions,
-                    photos
-                )
+                lifecycleScope.launch {
+                    editPublication(
+                        item.idPublication,
+                        email,
+                        title,
+                        category,
+                        mainPhoto,
+                        description,
+                        instructions,
+                        photos
+                    )
+                }
             }
         }
     }
 
-    private fun deletePublication(id: Int) {
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val sharedPref = SessionManager.getUserInfo(this@CreationDetailActivity)
-                val email = sharedPref["email"]
-                val idResponse = IdResponse(id, email!!)
-                val call = RetrofitManager.getRetroFit().create(APIService::class.java)
-                    .deleteCreation(idResponse)
-
-                val responseBody: ServerResponse = call.body()!!
-
-                withContext(Dispatchers.Main) {
-
-                    if (call.isSuccessful) {
-                        if (responseBody.message.isNotEmpty()) {
-                            SessionManager.showToast(
-                                this@CreationDetailActivity,
-                                R.string.publicationDeleted
-                            )
-                            withContext(Dispatchers.Main) {
-                                finish()
-                            }
-                        }
-                    } else {
-                        SessionManager.showToast(this@CreationDetailActivity, R.string.error2)
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    SessionManager.showToast(this@CreationDetailActivity, R.string.error)
-                }
-                Log.e("API Error", "Error: ${e.message}")
+    private suspend fun deletePublication(idPublication: Int, email: String) {
+        val response = useCases.deletePublication(idPublication, email)
+        if (response.message.isNotEmpty()) {
+            SessionManager.showToast(
+                this,
+                R.string.publicationDeleted
+            )
+            withContext(Dispatchers.Main) {
+                finish()
             }
+        } else {
+            SessionManager.showToast(
+                this,
+                R.string.error2
+            )
         }
     }
 
-    private fun editPublication(
-        id: Int,
+    private suspend fun editPublication(
+        idPublication: Int,
+        email: String,
         title: String,
         theme: String,
         photoMain: String,
@@ -192,49 +190,29 @@ class CreationDetailActivity : AppCompatActivity() {
         instructions: String,
         photoProcess: List<String>
     ) {
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val sharedPref = SessionManager.getUserInfo(this@CreationDetailActivity)
-                val email = sharedPref["email"]
-                val creation = UserEditPublication(
-                    id,
-                    email!!,
-                    title,
-                    theme,
-                    photoMain,
-                    description,
-                    instructions,
-                    photoProcess
-                )
-                val call = RetrofitManager.getRetroFit().create(APIService::class.java)
-                    .editCreation(creation)
-
-                val responseBody: ServerResponse = call.body()!!
-
-                withContext(Dispatchers.Main) {
-
-                    if (call.isSuccessful) {
-                        if (responseBody.message.isNotEmpty()) {
-                            SessionManager.showToast(
-                                this@CreationDetailActivity,
-                                R.string.publicationEdited
-                            )
-                            withContext(Dispatchers.Main) {
-                                finish()
-                            }
-                        }
-                    } else {
-                        SessionManager.showToast(this@CreationDetailActivity, R.string.error2)
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    SessionManager.showToast(this@CreationDetailActivity, R.string.error)
-                }
-                Log.e("API Error", "Error: ${e.message}")
+        val response = useCases.editPublication(
+            idPublication,
+            email,
+            title,
+            theme,
+            photoMain,
+            description,
+            instructions,
+            photoProcess
+        )
+        if (response.message.isNotEmpty()) {
+            SessionManager.showToast(
+                this,
+                R.string.publicationEdited
+            )
+            withContext(Dispatchers.Main) {
+                finish()
             }
+        } else {
+            SessionManager.showToast(
+                this,
+                R.string.error2
+            )
         }
     }
-
 }

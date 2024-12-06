@@ -1,4 +1,4 @@
-package com.example.diyapp.data.adapter.response
+package com.example.diyapp.domain
 
 import com.google.gson.annotations.SerializedName
 

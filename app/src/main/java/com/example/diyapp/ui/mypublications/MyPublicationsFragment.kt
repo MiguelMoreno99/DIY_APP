@@ -1,8 +1,6 @@
 package com.example.diyapp.ui.mypublications
 
-import RetrofitManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,21 +9,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diyapp.R
+import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.creations.FeedCreationsAdapter
 import com.example.diyapp.data.adapter.creations.FeedCreationsProvider
-import com.example.diyapp.data.adapter.response.UserEmail
-import com.example.diyapp.data.adapter.user.SessionManager
 import com.example.diyapp.databinding.FragmentMyPublicationsBinding
-import com.example.diyapp.domain.APIService
-import kotlinx.coroutines.Dispatchers
+import com.example.diyapp.domain.UseCases
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MyPublicationsFragment : Fragment() {
     private var _binding: FragmentMyPublicationsBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: FeedCreationsAdapter
+    private var useCases: UseCases = UseCases()
+    private var email: String = ""
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,6 +34,9 @@ class MyPublicationsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val sharedPref = SessionManager.getUserInfo(requireContext())
+        email = sharedPref["email"]!!
 
         adapter =
             FeedCreationsAdapter(FeedCreationsProvider.feedCreationsList) { item ->
@@ -64,48 +65,21 @@ class MyPublicationsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             delay(1000)
-            showFeed()
+            showFeed(email)
+            binding.progressBar.visibility = View.GONE
         }
     }
 
-    private fun showFeed() {
-
-        binding.progressBar.visibility = View.VISIBLE
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val sharedPref = SessionManager.getUserInfo(requireContext())
-                val email = sharedPref["email"]
-                val user = UserEmail(email!!)
-                val call = RetrofitManager.getRetroFit().create(APIService::class.java)
-                    .getFeedCreations(user)
-
-                val responseBody = call.body()
-
-                withContext(Dispatchers.Main) {
-
-                    binding.progressBar.visibility = View.GONE
-
-                    if (call.isSuccessful && responseBody != null) {
-                        if (responseBody.isNotEmpty()) {
-                            adapter.updateData(responseBody)
-                        } else {
-                            SessionManager.showToast(requireContext(), R.string.notHavePublications)
-                            adapter.deleteData()
-                        }
-                    } else {
-                        SessionManager.showToast(requireContext(), R.string.unableToLoadData)
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    SessionManager.showToast(requireContext(), R.string.error)
-                }
-                Log.e("API Error", "Error: ${e.message}")
-            }
+    private suspend fun showFeed(email: String) {
+        val response = useCases.getFeedCreations(email)
+        if (response.isNotEmpty()) {
+            adapter.updateData(response)
+        } else {
+            SessionManager.showToast(requireContext(), R.string.notHavePublications)
+            adapter.deleteData()
         }
     }
-
 }

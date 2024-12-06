@@ -1,6 +1,6 @@
 package com.example.diyapp.ui.explore
 
-import RetrofitManager
+import com.example.diyapp.domain.RetrofitManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,9 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.diyapp.R
 import com.example.diyapp.data.adapter.explore.FeedExploreAdapter
 import com.example.diyapp.data.adapter.explore.FeedExploreProvider
-import com.example.diyapp.data.adapter.user.SessionManager
+import com.example.diyapp.data.SessionManager
 import com.example.diyapp.databinding.FragmentExploreBinding
 import com.example.diyapp.domain.APIService
+import com.example.diyapp.domain.UseCases
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -25,7 +26,7 @@ class ExploreFragment : Fragment() {
     private var _binding: FragmentExploreBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: FeedExploreAdapter
-    private val feedExploreList = FeedExploreProvider.feedExploreList
+    private var useCases: UseCases = UseCases()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -43,50 +44,26 @@ class ExploreFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        binding.progressBar.visibility = View.VISIBLE
         lifecycleScope.launch {
             delay(1000)
             showFeed()
+            binding.progressBar.visibility = View.GONE
         }
     }
 
-    private fun showFeed() {
-
-        binding.progressBar.visibility = View.VISIBLE
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                val call =
-                    RetrofitManager.getRetroFit().create(APIService::class.java).getFeedExplore()
-
-                val responseBody = call.body()
-                Log.d("API Response", "Server Response: $responseBody")
-
-                withContext(Dispatchers.Main) {
-                    binding.progressBar.visibility = View.GONE
-
-                    if (call.isSuccessful && responseBody != null) {
-                        if (responseBody.isNotEmpty()) {
-                            adapter.updateData(responseBody)
-                        } else {
-                            SessionManager.showToast(requireContext(), R.string.noPublications)
-                            adapter.deleteData()
-                        }
-                    } else {
-                        SessionManager.showToast(requireContext(), R.string.unableToLoadData)
-                    }
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    binding.progressBar.visibility = View.GONE
-                    SessionManager.showToast(requireContext(), R.string.error)
-                }
-                Log.e("API Error", "Error: ${e.message}")
-            }
+    private suspend fun showFeed() {
+        val response = useCases.getFeedExplore()
+        if (response.isNotEmpty()) {
+            adapter.updateData(response)
+        } else {
+            SessionManager.showToast(requireContext(), R.string.noPublications)
+            adapter.deleteData()
         }
     }
 
     private fun setupRecyclerView() {
-        adapter = FeedExploreAdapter(feedExploreList) { item ->
+        adapter = FeedExploreAdapter(FeedExploreProvider.feedExploreList) { item ->
             findNavController().navigate(
                 ExploreFragmentDirections.actionExploreFragmentToPublicationDetailActivity(item)
             )

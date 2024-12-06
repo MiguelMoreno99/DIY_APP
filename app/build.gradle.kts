@@ -69,5 +69,17 @@ dependencies {
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
 
+    //ViewModel in libs.versions.toml
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    //LiveData in libs.versions.toml
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    //Fragment in libs.versions.toml
+    implementation(libs.androidx.fragment.ktx)
+
+    //Activity in libs.versions.toml
+    implementation(libs.androidx.activity.ktx)
+
     implementation (libs.logging.interceptor)
 }

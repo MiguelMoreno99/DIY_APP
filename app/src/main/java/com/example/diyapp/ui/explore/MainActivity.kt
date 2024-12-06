@@ -6,7 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.diyapp.R
-import com.example.diyapp.data.adapter.user.SessionManager
+import com.example.diyapp.data.SessionManager
 import com.example.diyapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
