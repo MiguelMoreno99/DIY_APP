@@ -5,14 +5,10 @@ import androidx.lifecycle.ViewModel
 import com.example.diyapp.R
 import com.example.diyapp.data.adapter.creations.FeedCreations
 import com.example.diyapp.domain.UseCases
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
-@HiltViewModel
-class MyPublicationsViewModel @Inject constructor(
-    val useCases: UseCases
-) : ViewModel() {
+class MyPublicationsViewModel : ViewModel() {
 
+    val useCases = UseCases()
     val feedCreations = MutableLiveData<List<FeedCreations>>()
     val errorMessage = MutableLiveData<Int?>()
 

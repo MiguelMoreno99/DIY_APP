@@ -16,19 +16,13 @@ import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.databinding.FragmentManageAccountsBinding
 import com.example.diyapp.ui.viewmodel.ManageAccountsViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class ManageAccountsFragment : Fragment() {
 
     private var _binding: FragmentManageAccountsBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ManageAccountsViewModel by viewModels()
-
-    @Inject
-    lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +35,7 @@ class ManageAccountsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sharedPref = sessionManager.getUserInfo(requireContext())
+        val sharedPref = SessionManager.getUserInfo(requireContext())
         val name = sharedPref["name"]
         val lastname = sharedPref["lastname"]
         val profilePicture = sharedPref["photo"]
@@ -53,8 +47,8 @@ class ManageAccountsFragment : Fragment() {
         }
 
         binding.logoutButton.setOnClickListener {
-            sessionManager.setUserLoggedIn(requireContext(), false)
-            sessionManager.showToast(requireContext(), R.string.logoutSuccessful)
+            SessionManager.setUserLoggedIn(requireContext(), false)
+            SessionManager.showToast(requireContext(), R.string.logoutSuccessful)
             findNavController().navigate(R.id.exploreFragment)
         }
 
@@ -72,7 +66,7 @@ class ManageAccountsFragment : Fragment() {
     }
 
     private fun validateFields() {
-        val user = sessionManager.getUserInfo(requireContext())
+        val user = SessionManager.getUserInfo(requireContext())
         val name = binding.nameEditText.text.toString().trim()
         val lastname = binding.lastNameEditText.text.toString().trim()
         val newPassword = binding.newPasswordEditText.text.toString().trim()
@@ -82,15 +76,15 @@ class ManageAccountsFragment : Fragment() {
 
         when {
             name.isBlank() || lastname.isBlank() || currentPassword.isBlank() || confirmPassword.isBlank() -> {
-                sessionManager.showToast(requireContext(), R.string.fillFields)
+                SessionManager.showToast(requireContext(), R.string.fillFields)
             }
 
             currentPassword != confirmPassword -> {
-                sessionManager.showToast(requireContext(), R.string.differentPasswords)
+                SessionManager.showToast(requireContext(), R.string.differentPasswords)
             }
 
             currentPassword != user["password"] -> {
-                sessionManager.showToast(requireContext(), R.string.verifyPassword)
+                SessionManager.showToast(requireContext(), R.string.verifyPassword)
             }
 
             else -> {
@@ -99,7 +93,7 @@ class ManageAccountsFragment : Fragment() {
                         viewModel.updateUser(
                             user["email"]!!, name, lastname, user["password"]!!, photo
                         )
-                        sessionManager.setUserLoggedIn(
+                        SessionManager.setUserLoggedIn(
                             requireContext(),
                             true,
                             user["email"]!!,
@@ -108,11 +102,11 @@ class ManageAccountsFragment : Fragment() {
                             user["password"]!!,
                             photo
                         )
-                    } else if (sessionManager.isValidPassword(newPassword)) {
+                    } else if (SessionManager.isValidPassword(newPassword)) {
                         viewModel.updateUser(
                             user["email"]!!, name, lastname, newPassword, photo
                         )
-                        sessionManager.setUserLoggedIn(
+                        SessionManager.setUserLoggedIn(
                             requireContext(),
                             true,
                             user["email"]!!,
@@ -122,10 +116,10 @@ class ManageAccountsFragment : Fragment() {
                             photo
                         )
                     } else {
-                        sessionManager.showToast(requireContext(), R.string.checkPassword)
+                        SessionManager.showToast(requireContext(), R.string.checkPassword)
                         return@launch
                     }
-                    sessionManager.showToast(requireContext(), R.string.userUpdated)
+                    SessionManager.showToast(requireContext(), R.string.userUpdated)
                     findNavController().navigate(R.id.exploreFragment)
                 }
             }

@@ -10,10 +10,7 @@ import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.data.adapter.explore.InstructionsAdapter
 import com.example.diyapp.databinding.ActivityPublicationDetailBinding
 import com.example.diyapp.ui.viewmodel.PublicationDetailViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class PublicationDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPublicationDetailBinding
@@ -21,16 +18,13 @@ class PublicationDetailActivity : AppCompatActivity() {
     private val viewModel: PublicationDetailViewModel by viewModels()
     private var email: String = ""
 
-    @Inject
-    lateinit var sessionManager: SessionManager
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPublicationDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         args = PublicationDetailActivityArgs.fromBundle(intent.extras!!)
-        email = sessionManager.getUserInfo(this)["email"]!!
+        email = SessionManager.getUserInfo(this)["email"]!!
         viewModel.loadPublicationInfo(args.feedPublicationItem)
 
         setupObservers()
@@ -55,14 +49,14 @@ class PublicationDetailActivity : AppCompatActivity() {
 
         viewModel.isAddedToFavorites.observe(this) { isAdded ->
             if (isAdded) {
-                sessionManager.showToast(this, R.string.addedToFavorites)
+                SessionManager.showToast(this, R.string.addedToFavorites)
                 finish()
             }
         }
 
         viewModel.errorMessage.observe(this) { errorMessage ->
             errorMessage?.let {
-                sessionManager.showToast(this, it)
+                SessionManager.showToast(this, it)
             }
         }
     }
@@ -70,10 +64,10 @@ class PublicationDetailActivity : AppCompatActivity() {
     private fun setupListeners() {
         binding.buttonAddToFavorites.setOnClickListener {
             val item = viewModel.publication.value
-            if (sessionManager.isUserLoggedIn(this) && item != null) {
+            if (SessionManager.isUserLoggedIn(this) && item != null) {
                 viewModel.addFavoritePublication(item.idPublication, email)
             } else {
-                sessionManager.showToast(this, R.string.loginRequired)
+                SessionManager.showToast(this, R.string.loginRequired)
             }
         }
     }

@@ -5,9 +5,10 @@ import com.example.diyapp.data.adapter.creations.FeedCreations
 import com.example.diyapp.data.adapter.explore.FeedExplore
 import com.example.diyapp.data.adapter.favorites.FeedFavorites
 import com.example.diyapp.data.adapter.user.User
-import javax.inject.Inject
 
-class UseCases @Inject constructor(private val repository: MainRepository) {
+class UseCases {
+
+    private val repository = MainRepository()
 
     suspend fun getFeedExplore(): List<FeedExplore> {
         return repository.getFeedExplore()

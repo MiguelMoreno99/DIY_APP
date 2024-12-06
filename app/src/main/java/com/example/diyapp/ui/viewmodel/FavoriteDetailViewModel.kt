@@ -5,14 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.diyapp.data.adapter.favorites.FeedFavorites
 import com.example.diyapp.domain.UseCases
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class FavoriteDetailViewModel @Inject constructor(
-    val useCases: UseCases
-) : ViewModel() {
+class FavoriteDetailViewModel : ViewModel() {
 
     val title = MutableLiveData<String>()
     val theme = MutableLiveData<String>()
@@ -21,6 +16,7 @@ class FavoriteDetailViewModel @Inject constructor(
     val mainPhoto = MutableLiveData<String>()
     val photoProcess = MutableLiveData<List<String>>()
     val isFavoriteRemoved = MutableLiveData<Boolean>()
+    val useCases = UseCases()
 
     fun loadPublicationDetails(item: FeedFavorites) {
         title.value = item.title

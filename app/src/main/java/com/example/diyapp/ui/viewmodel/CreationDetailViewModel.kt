@@ -4,17 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.diyapp.domain.UseCases
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class CreationDetailViewModel @Inject constructor(
-    val useCases: UseCases
-) : ViewModel() {
+class CreationDetailViewModel : ViewModel() {
 
     val operationResult = MutableLiveData<String>()
     val isLoading = MutableLiveData<Boolean>()
+    val useCases = UseCases()
 
     fun deletePublication(idPublication: Int, email: String) {
         isLoading.value = true

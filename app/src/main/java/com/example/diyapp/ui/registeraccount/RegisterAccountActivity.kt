@@ -13,19 +13,13 @@ import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.databinding.ActivityRegisterAccountBinding
 import com.example.diyapp.ui.viewmodel.RegisterAccountViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class RegisterAccountActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterAccountBinding
     private var imageSet = false
     private val viewModel: RegisterAccountViewModel by viewModels()
-
-    @Inject
-    lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,13 +75,13 @@ class RegisterAccountActivity : AppCompatActivity() {
     private fun observeViewModel() {
         viewModel.errorMessage.observe(this) { messageResId ->
             messageResId?.let {
-                sessionManager.showToast(this, it)
+                SessionManager.showToast(this, it)
             }
         }
 
         viewModel.isUserRegistered.observe(this) { isRegistered ->
             if (isRegistered) {
-                sessionManager.showToast(this, R.string.userCreated)
+                SessionManager.showToast(this, R.string.userCreated)
                 finish()
             }
         }

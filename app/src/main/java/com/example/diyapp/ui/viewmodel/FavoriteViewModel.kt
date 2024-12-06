@@ -5,18 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.diyapp.data.adapter.favorites.FeedFavorites
 import com.example.diyapp.domain.UseCases
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class FavoriteViewModel @Inject constructor(
-    val useCases: UseCases
-) : ViewModel() {
+class FavoriteViewModel : ViewModel() {
 
     val favorites = MutableLiveData<List<FeedFavorites>>()
     val isLoading = MutableLiveData<Boolean>()
     val emptyState = MutableLiveData<Boolean>()
+    val useCases = UseCases()
 
     fun loadFavorites(email: String) {
         isLoading.value = true

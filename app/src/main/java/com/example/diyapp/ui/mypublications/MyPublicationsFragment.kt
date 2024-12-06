@@ -13,17 +13,11 @@ import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.creations.FeedCreationsAdapter
 import com.example.diyapp.databinding.FragmentMyPublicationsBinding
 import com.example.diyapp.ui.viewmodel.MyPublicationsViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class MyPublicationsFragment : Fragment() {
     private var _binding: FragmentMyPublicationsBinding? = null
     private val binding get() = _binding!!
-
-    @Inject
-    lateinit var sessionManager: SessionManager
 
     private lateinit var adapter: FeedCreationsAdapter
     private val viewModel: MyPublicationsViewModel by viewModels()
@@ -43,7 +37,7 @@ class MyPublicationsFragment : Fragment() {
         setupRecyclerView()
         setupSearchView()
 
-        val sharedPref = sessionManager.getUserInfo(requireContext())
+        val sharedPref = SessionManager.getUserInfo(requireContext())
         email = sharedPref["email"] ?: ""
 
         viewModel.feedCreations.observe(viewLifecycleOwner) { creations ->
@@ -52,7 +46,7 @@ class MyPublicationsFragment : Fragment() {
 
         viewModel.errorMessage.observe(viewLifecycleOwner) { messageResId ->
             messageResId?.let {
-                sessionManager.showToast(requireContext(), it)
+                SessionManager.showToast(requireContext(), it)
                 adapter.deleteData()
             }
         }

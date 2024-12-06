@@ -6,19 +6,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.diyapp.R
 import com.example.diyapp.data.adapter.explore.FeedExplore
 import com.example.diyapp.domain.UseCases
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class PublicationDetailViewModel @Inject constructor(
-    val useCases: UseCases
-) : ViewModel() {
+class PublicationDetailViewModel : ViewModel() {
 
     val publication = MutableLiveData<FeedExplore>()
     val isAddedToFavorites = MutableLiveData<Boolean>()
     val errorMessage = MutableLiveData<Int?>()
+    val useCases = UseCases()
 
     fun loadPublicationInfo(item: FeedExplore) {
         publication.value = item

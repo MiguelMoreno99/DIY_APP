@@ -7,13 +7,32 @@ import com.example.diyapp.data.adapter.favorites.FeedFavorites
 import com.example.diyapp.data.adapter.user.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitManager @Inject constructor(private val api: APIService) {
+class RetrofitManager {
+
+    private val baseUrl = "http://myprojectapi.com/ProyectoSistemasMoviles/index.php/"
+    private val retrofitInstance: Retrofit by lazy {
+        val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+        val client = OkHttpClient.Builder().addInterceptor(logging).build()
+
+        Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    fun getRetroFit(): Retrofit {
+        return retrofitInstance
+    }
 
     suspend fun getFeedExplore(): List<FeedExplore> {
         return withContext(Dispatchers.IO) {
-            val call = api.getFeedExplore()
+            val call = getRetroFit().create(APIService::class.java).getFeedExplore()
             val responseBody = call.body()
             Log.d("API Response", "Server Response: $responseBody")
             responseBody ?: emptyList()
@@ -23,7 +42,7 @@ class RetrofitManager @Inject constructor(private val api: APIService) {
     suspend fun getFeedFavorite(email: String): List<FeedFavorites> {
         return withContext(Dispatchers.IO) {
             val user = UserEmail(email)
-            val call = api.getFeedFavorites(user)
+            val call = getRetroFit().create(APIService::class.java).getFeedFavorites(user)
             val responseBody = call.body()
             Log.d("API Response", "Server Response: $responseBody")
             responseBody ?: emptyList()
@@ -33,7 +52,7 @@ class RetrofitManager @Inject constructor(private val api: APIService) {
     suspend fun getFeedCreations(email: String): List<FeedCreations> {
         return withContext(Dispatchers.IO) {
             val user = UserEmail(email)
-            val call = api.getFeedCreations(user)
+            val call = getRetroFit().create(APIService::class.java).getFeedCreations(user)
             val responseBody = call.body()
             Log.d("API Response", "Server Response: $responseBody")
             responseBody ?: emptyList()
@@ -43,7 +62,7 @@ class RetrofitManager @Inject constructor(private val api: APIService) {
     suspend fun getUser(email: String): List<User> {
         return withContext(Dispatchers.IO) {
             val user = UserEmail(email)
-            val call = api.listUser(user)
+            val call = getRetroFit().create(APIService::class.java).listUser(user)
             val responseBody = call.body()
             Log.d("API Response", "Server Response: $responseBody")
             responseBody ?: emptyList()
@@ -59,7 +78,7 @@ class RetrofitManager @Inject constructor(private val api: APIService) {
     ): List<User> {
         return withContext(Dispatchers.IO) {
             val user = User(email, name, lastname, password, userPhoto)
-            val call = api.modifyUser(user)
+            val call = getRetroFit().create(APIService::class.java).modifyUser(user)
             val responseBody = call.body()
             Log.d("API Response", "Server Response: $responseBody")
             responseBody ?: emptyList()
@@ -82,7 +101,7 @@ class RetrofitManager @Inject constructor(private val api: APIService) {
                 password,
                 userPhoto
             )
-            val call = api.insertUser(user)
+            val call = getRetroFit().create(APIService::class.java).insertUser(user)
             val responseBody = call.body()
             Log.d("API Response", "Server Response: $responseBody")
             responseBody ?: ServerResponse("")
@@ -109,7 +128,7 @@ class RetrofitManager @Inject constructor(private val api: APIService) {
                 0,
                 photoProcess
             )
-            val call = api.createPublication(creation)
+            val call = getRetroFit().create(APIService::class.java).createPublication(creation)
             val responseBody = call.body()
             Log.d("API Response", "Server Response: $responseBody")
             responseBody ?: ServerResponse("")
@@ -137,7 +156,7 @@ class RetrofitManager @Inject constructor(private val api: APIService) {
                 instructions,
                 photoProcess
             )
-            val call = api.editCreation(creation)
+            val call = getRetroFit().create(APIService::class.java).editCreation(creation)
             val responseBody = call.body()
             Log.d("API Response", "Server Response: $responseBody")
             responseBody ?: ServerResponse("")
@@ -147,7 +166,7 @@ class RetrofitManager @Inject constructor(private val api: APIService) {
     suspend fun deletePublication(idPublication: Int, email: String): ServerResponse {
         return withContext(Dispatchers.IO) {
             val idResponse = IdResponse(idPublication, email)
-            val call = api.deleteCreation(idResponse)
+            val call = getRetroFit().create(APIService::class.java).deleteCreation(idResponse)
             val responseBody = call.body()
             Log.d("API Response", "Server Response: $responseBody")
             responseBody ?: ServerResponse("")
@@ -157,7 +176,7 @@ class RetrofitManager @Inject constructor(private val api: APIService) {
     suspend fun removeFavorite(idPublication: Int, email: String): ServerResponse {
         return withContext(Dispatchers.IO) {
             val idResponse = IdResponse(idPublication, email)
-            val call = api.deleteFromFavorites(idResponse)
+            val call = getRetroFit().create(APIService::class.java).deleteFromFavorites(idResponse)
             val responseBody = call.body()
             Log.d("API Response", "Server Response: $responseBody")
             responseBody ?: ServerResponse("")
@@ -167,7 +186,7 @@ class RetrofitManager @Inject constructor(private val api: APIService) {
     suspend fun addFavoritePublication(idPublication: Int, email: String): ServerResponse {
         return withContext(Dispatchers.IO) {
             val idResponse = IdResponse(idPublication, email)
-            val call = api.addToFavorites(idResponse)
+            val call = getRetroFit().create(APIService::class.java).addToFavorites(idResponse)
             val responseBody = call.body()
             Log.d("API Response", "Server Response: $responseBody")
             responseBody ?: ServerResponse("")
