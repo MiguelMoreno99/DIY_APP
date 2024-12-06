@@ -72,6 +72,7 @@ class NewPublicationFragment : Fragment() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun setupImagePickers() {
         val pickMainPhoto =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
