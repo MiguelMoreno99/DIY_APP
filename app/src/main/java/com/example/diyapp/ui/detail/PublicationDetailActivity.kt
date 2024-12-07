@@ -10,7 +10,9 @@ import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.data.adapter.explore.InstructionsAdapter
 import com.example.diyapp.databinding.ActivityPublicationDetailBinding
 import com.example.diyapp.ui.viewmodel.PublicationDetailViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PublicationDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPublicationDetailBinding
@@ -25,7 +27,7 @@ class PublicationDetailActivity : AppCompatActivity() {
 
         args = PublicationDetailActivityArgs.fromBundle(intent.extras!!)
         email = SessionManager.getUserInfo(this)["email"]!!
-        viewModel.loadPublicationInfo(args.feedPublicationItem)
+        viewModel.loadPublicationInfo(args.exploreToDetail)
 
         setupObservers()
         setupListeners()

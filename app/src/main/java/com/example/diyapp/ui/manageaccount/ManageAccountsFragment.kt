@@ -16,8 +16,9 @@ import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.databinding.FragmentManageAccountsBinding
 import com.example.diyapp.ui.viewmodel.ManageAccountsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
+@AndroidEntryPoint
 class ManageAccountsFragment : Fragment() {
 
     private var _binding: FragmentManageAccountsBinding? = null

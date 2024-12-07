@@ -21,8 +21,9 @@ import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.data.adapter.create.MultipleImagesAdapter
 import com.example.diyapp.databinding.FragmentNewPublicationBinding
 import com.example.diyapp.ui.viewmodel.NewPublicationViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
+@AndroidEntryPoint
 class NewPublicationFragment : Fragment() {
 
     private var _binding: FragmentNewPublicationBinding? = null

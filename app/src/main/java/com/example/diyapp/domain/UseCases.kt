@@ -2,16 +2,37 @@ package com.example.diyapp.domain
 
 import com.example.diyapp.data.MainRepository
 import com.example.diyapp.data.adapter.creations.FeedCreations
-import com.example.diyapp.data.adapter.explore.FeedExplore
 import com.example.diyapp.data.adapter.favorites.FeedFavorites
 import com.example.diyapp.data.adapter.user.User
+import com.example.diyapp.data.database.entities.toDatabase
+import com.example.diyapp.data.model.CreationModel
+import com.example.diyapp.data.model.UserModel
+import javax.inject.Inject
 
-class UseCases {
+class UseCases @Inject constructor(
+    private val repository: MainRepository
+) {
 
-    private val repository = MainRepository()
+    suspend fun getFeedExplore(): List<CreationModel> {
+        val feed = repository.getFeedExploreFromApi()
+        return if (feed.isNotEmpty()) {
+            repository.clearPublications()
+            repository.insertCreations(feed.map { it.toDatabase() })
+            feed
+        } else {
+            repository.getFeedExploreFromDataBase()
+        }
+    }
 
-    suspend fun getFeedExplore(): List<FeedExplore> {
-        return repository.getFeedExplore()
+    suspend fun getUser(email: String): List<UserModel> {
+        val users = repository.getUserFromApi(email)
+        return if (users.isNotEmpty()) {
+            repository.clearUsers()
+            repository.insertUsers(users.map { it.toDatabase() })
+            users
+        } else {
+            repository.getUserFromDataBase(email)
+        }
     }
 
     suspend fun getFeedFavorite(email: String): List<FeedFavorites> {
@@ -20,10 +41,6 @@ class UseCases {
 
     suspend fun getFeedCreations(email: String): List<FeedCreations> {
         return repository.getFeedCreations(email)
-    }
-
-    suspend fun getUser(email: String): List<User> {
-        return repository.getUser(email)
     }
 
     suspend fun editUser(

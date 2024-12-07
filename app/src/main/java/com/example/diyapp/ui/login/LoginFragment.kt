@@ -12,8 +12,9 @@ import com.example.diyapp.R
 import com.example.diyapp.data.SessionManager
 import com.example.diyapp.databinding.FragmentLoginBinding
 import com.example.diyapp.ui.viewmodel.LoginViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null

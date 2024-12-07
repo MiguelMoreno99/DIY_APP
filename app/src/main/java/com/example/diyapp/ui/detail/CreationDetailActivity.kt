@@ -21,7 +21,9 @@ import com.example.diyapp.data.adapter.creations.FeedCreations
 import com.example.diyapp.data.adapter.explore.InstructionsAdapter
 import com.example.diyapp.databinding.ActivityCreationDetailBinding
 import com.example.diyapp.ui.viewmodel.CreationDetailViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CreationDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCreationDetailBinding

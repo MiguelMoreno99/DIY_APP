@@ -2,6 +2,7 @@ package com.example.diyapp.data.database.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.diyapp.data.database.entities.CreationEntity
@@ -9,8 +10,8 @@ import com.example.diyapp.data.database.entities.CreationEntity
 @Dao
 interface CreationsDao {
 
-    @Insert
-    suspend fun insertPublication(publication: CreationEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPublication(publications: List<CreationEntity>)
 
     @Query("SELECT * FROM CreationTable WHERE state = 1")
     suspend fun getAllCompletedPublications(): List<CreationEntity>
@@ -32,4 +33,7 @@ interface CreationsDao {
 
     @Update
     suspend fun updatePublication(publication: CreationEntity)
+
+    @Query(value = "DELETE FROM CreationTable")
+    suspend fun deleteAllPublications()
 }

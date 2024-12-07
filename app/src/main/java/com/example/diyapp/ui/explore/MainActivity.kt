@@ -10,7 +10,8 @@ import com.example.diyapp.R
 import com.example.diyapp.data.SessionManager
 import com.example.diyapp.databinding.ActivityMainBinding
 import com.example.diyapp.ui.viewmodel.MainViewModel
-
+import dagger.hilt.android.AndroidEntryPoint
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController

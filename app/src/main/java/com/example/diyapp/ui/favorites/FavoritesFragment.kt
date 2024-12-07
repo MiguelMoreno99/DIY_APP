@@ -14,8 +14,9 @@ import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.favorites.FeedFavoritesAdapter
 import com.example.diyapp.databinding.FragmentFavoritesBinding
 import com.example.diyapp.ui.viewmodel.FavoriteViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
+@AndroidEntryPoint
 class FavoritesFragment : Fragment() {
 
     private var _binding: FragmentFavoritesBinding? = null

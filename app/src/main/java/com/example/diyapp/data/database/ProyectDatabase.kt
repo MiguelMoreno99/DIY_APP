@@ -9,7 +9,11 @@ import com.example.diyapp.data.database.entities.CreationEntity
 import com.example.diyapp.data.database.entities.FavoriteEntity
 import com.example.diyapp.data.database.entities.UserEntity
 
-@Database(entities = [UserEntity::class, CreationEntity::class, FavoriteEntity::class], version = 1)
+@Database(
+    entities = [UserEntity::class, CreationEntity::class, FavoriteEntity::class],
+    version = 2,
+    exportSchema = false
+)
 abstract class ProjectDatabase : RoomDatabase() {
     abstract fun getUserDao(): UserDao
     abstract fun getCreationsDao(): CreationsDao

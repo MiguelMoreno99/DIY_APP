@@ -44,7 +44,8 @@
         tools:layout="@layout/fragment_explore">
         <action
             android:id="@+id/action_exploreFragment_to_publicationDetailActivity"
-            app:destination="@id/publicationDetailActivity" />
+            app:destination="@id/publicationDetailActivity"
+            app:launchSingleTop="false" />
     </fragment>
     <activity
         android:id="@+id/publicationDetailActivity"
@@ -52,8 +53,8 @@
         android:label="activity_publication_detail"
         tools:layout="@layout/activity_publication_detail">
         <argument
-            android:name="feedPublicationItem"
-            app:argType="com.example.diyapp.data.adapter.explore.FeedExplore" />
+            android:name="exploreToDetail"
+            app:argType="com.example.diyapp.data.model.CreationModel" />
     </activity>
     <activity
         android:id="@+id/favoriteDetailActivity"

@@ -7,65 +7,62 @@ import com.example.diyapp.data.adapter.favorites.FeedFavorites
 import com.example.diyapp.data.adapter.user.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class RetrofitManager {
-
-    private val baseUrl = "http://myprojectapi.com/ProyectoSistemasMoviles/index.php/"
-    private val retrofitInstance: Retrofit by lazy {
-        val logging = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
-        val client = OkHttpClient.Builder().addInterceptor(logging).build()
-
-        Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-
-    fun getRetroFit(): Retrofit {
-        return retrofitInstance
-    }
+class RetrofitManager @Inject constructor(private val apiService: APIService) {
 
     suspend fun getFeedExplore(): List<FeedExplore> {
         return withContext(Dispatchers.IO) {
-            val call = getRetroFit().create(APIService::class.java).getFeedExplore()
-            val responseBody = call.body()
-            Log.d("API Response", "Server Response: $responseBody")
-            responseBody ?: emptyList()
+            try {
+                val call = apiService.getFeedExplore()
+                val responseBody = call.body()
+                Log.d("API Response", "Server Response: $responseBody")
+                responseBody ?: emptyList()
+            } catch (e: Exception) {
+                emptyList()
+            }
         }
     }
 
     suspend fun getFeedFavorite(email: String): List<FeedFavorites> {
         return withContext(Dispatchers.IO) {
-            val user = UserEmail(email)
-            val call = getRetroFit().create(APIService::class.java).getFeedFavorites(user)
-            val responseBody = call.body()
-            Log.d("API Response", "Server Response: $responseBody")
-            responseBody ?: emptyList()
+            try {
+                val user = UserEmail(email)
+                val call = apiService.getFeedFavorites(user)
+                val responseBody = call.body()
+                Log.d("API Response", "Server Response: $responseBody")
+                responseBody ?: emptyList()
+            } catch (e: Exception) {
+                emptyList()
+            }
         }
     }
 
     suspend fun getFeedCreations(email: String): List<FeedCreations> {
         return withContext(Dispatchers.IO) {
-            val user = UserEmail(email)
-            val call = getRetroFit().create(APIService::class.java).getFeedCreations(user)
-            val responseBody = call.body()
-            Log.d("API Response", "Server Response: $responseBody")
-            responseBody ?: emptyList()
+            try {
+                val user = UserEmail(email)
+                val call = apiService.getFeedCreations(user)
+                val responseBody = call.body()
+                Log.d("API Response", "Server Response: $responseBody")
+                responseBody ?: emptyList()
+            } catch (e: Exception) {
+                emptyList()
+            }
         }
     }
 
     suspend fun getUser(email: String): List<User> {
         return withContext(Dispatchers.IO) {
-            val user = UserEmail(email)
-            val call = getRetroFit().create(APIService::class.java).listUser(user)
-            val responseBody = call.body()
-            Log.d("API Response", "Server Response: $responseBody")
-            responseBody ?: emptyList()
+            try {
+                val user = UserEmail(email)
+                val call = apiService.listUser(user)
+                val responseBody = call.body()
+                Log.d("API Response", "Server Response: $responseBody")
+                responseBody ?: emptyList()
+            } catch (e: Exception) {
+                emptyList()
+            }
         }
     }
 
@@ -77,11 +74,15 @@ class RetrofitManager {
         userPhoto: String
     ): List<User> {
         return withContext(Dispatchers.IO) {
-            val user = User(email, name, lastname, password, userPhoto)
-            val call = getRetroFit().create(APIService::class.java).modifyUser(user)
-            val responseBody = call.body()
-            Log.d("API Response", "Server Response: $responseBody")
-            responseBody ?: emptyList()
+            try {
+                val user = User(email, name, lastname, password, userPhoto)
+                val call = apiService.modifyUser(user)
+                val responseBody = call.body()
+                Log.d("API Response", "Server Response: $responseBody")
+                responseBody ?: emptyList()
+            } catch (e: Exception) {
+                emptyList()
+            }
         }
     }
 
@@ -94,17 +95,21 @@ class RetrofitManager {
     ): ServerResponse {
 
         return withContext(Dispatchers.IO) {
-            val user = User(
-                email,
-                name,
-                lastname,
-                password,
-                userPhoto
-            )
-            val call = getRetroFit().create(APIService::class.java).insertUser(user)
-            val responseBody = call.body()
-            Log.d("API Response", "Server Response: $responseBody")
-            responseBody ?: ServerResponse("")
+            try {
+                val user = User(
+                    email,
+                    name,
+                    lastname,
+                    password,
+                    userPhoto
+                )
+                val call = apiService.insertUser(user)
+                val responseBody = call.body()
+                Log.d("API Response", "Server Response: $responseBody")
+                responseBody ?: ServerResponse("")
+            } catch (e: Exception) {
+                ServerResponse("")
+            }
         }
     }
 
@@ -118,20 +123,24 @@ class RetrofitManager {
         photoProcess: List<String>
     ): ServerResponse {
         return withContext(Dispatchers.IO) {
-            val creation = UserNewPublication(
-                email,
-                title,
-                theme,
-                photoMain,
-                instructions,
-                description,
-                0,
-                photoProcess
-            )
-            val call = getRetroFit().create(APIService::class.java).createPublication(creation)
-            val responseBody = call.body()
-            Log.d("API Response", "Server Response: $responseBody")
-            responseBody ?: ServerResponse("")
+            try {
+                val creation = UserNewPublication(
+                    email,
+                    title,
+                    theme,
+                    photoMain,
+                    instructions,
+                    description,
+                    0,
+                    photoProcess
+                )
+                val call = apiService.createPublication(creation)
+                val responseBody = call.body()
+                Log.d("API Response", "Server Response: $responseBody")
+                responseBody ?: ServerResponse("")
+            } catch (e: Exception) {
+                ServerResponse("")
+            }
         }
     }
 
@@ -146,50 +155,66 @@ class RetrofitManager {
         photoProcess: List<String>
     ): ServerResponse {
         return withContext(Dispatchers.IO) {
-            val creation = UserEditPublication(
-                idPublication,
-                email,
-                title,
-                theme,
-                photoMain,
-                description,
-                instructions,
-                photoProcess
-            )
-            val call = getRetroFit().create(APIService::class.java).editCreation(creation)
-            val responseBody = call.body()
-            Log.d("API Response", "Server Response: $responseBody")
-            responseBody ?: ServerResponse("")
+            try {
+                val creation = UserEditPublication(
+                    idPublication,
+                    email,
+                    title,
+                    theme,
+                    photoMain,
+                    description,
+                    instructions,
+                    photoProcess
+                )
+                val call = apiService.editCreation(creation)
+                val responseBody = call.body()
+                Log.d("API Response", "Server Response: $responseBody")
+                responseBody ?: ServerResponse("")
+            } catch (e: Exception) {
+                ServerResponse("")
+            }
         }
     }
 
     suspend fun deletePublication(idPublication: Int, email: String): ServerResponse {
         return withContext(Dispatchers.IO) {
-            val idResponse = IdResponse(idPublication, email)
-            val call = getRetroFit().create(APIService::class.java).deleteCreation(idResponse)
-            val responseBody = call.body()
-            Log.d("API Response", "Server Response: $responseBody")
-            responseBody ?: ServerResponse("")
+            try {
+                val idResponse = IdResponse(idPublication, email)
+                val call = apiService.deleteCreation(idResponse)
+                val responseBody = call.body()
+                Log.d("API Response", "Server Response: $responseBody")
+                responseBody ?: ServerResponse("")
+            } catch (e: Exception) {
+                ServerResponse("")
+            }
         }
     }
 
     suspend fun removeFavorite(idPublication: Int, email: String): ServerResponse {
         return withContext(Dispatchers.IO) {
-            val idResponse = IdResponse(idPublication, email)
-            val call = getRetroFit().create(APIService::class.java).deleteFromFavorites(idResponse)
-            val responseBody = call.body()
-            Log.d("API Response", "Server Response: $responseBody")
-            responseBody ?: ServerResponse("")
+            try {
+                val idResponse = IdResponse(idPublication, email)
+                val call = apiService.deleteFromFavorites(idResponse)
+                val responseBody = call.body()
+                Log.d("API Response", "Server Response: $responseBody")
+                responseBody ?: ServerResponse("")
+            } catch (e: Exception) {
+                ServerResponse("")
+            }
         }
     }
 
     suspend fun addFavoritePublication(idPublication: Int, email: String): ServerResponse {
         return withContext(Dispatchers.IO) {
-            val idResponse = IdResponse(idPublication, email)
-            val call = getRetroFit().create(APIService::class.java).addToFavorites(idResponse)
-            val responseBody = call.body()
-            Log.d("API Response", "Server Response: $responseBody")
-            responseBody ?: ServerResponse("")
+            try {
+                val idResponse = IdResponse(idPublication, email)
+                val call = apiService.addToFavorites(idResponse)
+                val responseBody = call.body()
+                Log.d("API Response", "Server Response: $responseBody")
+                responseBody ?: ServerResponse("")
+            } catch (e: Exception) {
+                ServerResponse("")
+            }
         }
     }
 }

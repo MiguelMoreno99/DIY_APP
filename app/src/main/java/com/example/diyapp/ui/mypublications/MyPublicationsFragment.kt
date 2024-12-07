@@ -13,8 +13,9 @@ import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.creations.FeedCreationsAdapter
 import com.example.diyapp.databinding.FragmentMyPublicationsBinding
 import com.example.diyapp.ui.viewmodel.MyPublicationsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
+@AndroidEntryPoint
 class MyPublicationsFragment : Fragment() {
     private var _binding: FragmentMyPublicationsBinding? = null
     private val binding get() = _binding!!

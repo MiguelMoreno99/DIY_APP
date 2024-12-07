@@ -13,8 +13,9 @@ import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.databinding.ActivityRegisterAccountBinding
 import com.example.diyapp.ui.viewmodel.RegisterAccountViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
+@AndroidEntryPoint
 class RegisterAccountActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRegisterAccountBinding

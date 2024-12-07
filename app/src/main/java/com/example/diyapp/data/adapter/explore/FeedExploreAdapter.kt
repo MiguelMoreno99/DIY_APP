@@ -9,10 +9,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.diyapp.R
 import com.example.diyapp.data.adapter.create.ImageUtils
+import com.example.diyapp.data.model.CreationModel
 
 class FeedExploreAdapter(
-    private var feedExplorerList: List<FeedExplore>,
-    private val onClick: (FeedExplore) -> Unit
+    private var feedExplorerList: List<CreationModel>,
+    private val onClick: (CreationModel) -> Unit
 ) :
     RecyclerView.Adapter<FeedExploreAdapter.FeedExploreViewHolder>() {
 
@@ -26,7 +27,7 @@ class FeedExploreAdapter(
         private val likesCountNumber: TextView = view.findViewById(R.id.tvLikesCountNumber)
         private val creationDate: TextView = view.findViewById(R.id.tvCreationDate)
         private val photoMain: ImageView = view.findViewById(R.id.ivMainImage)
-        fun render(feedExploreModel: FeedExplore) {
+        fun render(feedExploreModel: CreationModel) {
             userName.text = feedExploreModel.email
             category.text = feedExploreModel.theme
             title.text = feedExploreModel.title
@@ -51,7 +52,7 @@ class FeedExploreAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(newData: List<FeedExplore>) {
+    fun updateData(newData: List<CreationModel>) {
         filteredList.clear()
         filteredList.addAll(newData)
         feedExplorerList = filteredList

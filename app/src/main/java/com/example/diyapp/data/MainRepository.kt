@@ -3,23 +3,62 @@ package com.example.diyapp.data
 import com.example.diyapp.data.adapter.creations.FeedCreations
 import com.example.diyapp.data.adapter.creations.FeedCreationsProvider
 import com.example.diyapp.data.adapter.explore.FeedExplore
-import com.example.diyapp.data.adapter.explore.FeedExploreProvider
 import com.example.diyapp.data.adapter.favorites.FeedFavorites
 import com.example.diyapp.data.adapter.favorites.FeedFavoritesProvider
 import com.example.diyapp.data.adapter.user.User
-import com.example.diyapp.data.adapter.user.UserProvider
 import com.example.diyapp.data.database.daos.CreationsDao
+import com.example.diyapp.data.database.daos.FavoriteDao
+import com.example.diyapp.data.database.daos.UserDao
+import com.example.diyapp.data.database.entities.CreationEntity
+import com.example.diyapp.data.database.entities.UserEntity
+import com.example.diyapp.data.model.CreationModel
+import com.example.diyapp.data.model.UserModel
+import com.example.diyapp.data.model.toDomain
 import com.example.diyapp.domain.RetrofitManager
 import com.example.diyapp.domain.ServerResponse
+import javax.inject.Inject
 
-class MainRepository {
+class MainRepository @Inject constructor(
+    private val api: RetrofitManager,
+    private val creationsDao: CreationsDao,
+    private val favoritesDao: FavoriteDao,
+    private val userDao: UserDao
+) {
 
-    private val api = RetrofitManager()
+    suspend fun getFeedExploreFromApi(): List<CreationModel> {
+        val response: List<FeedExplore> = api.getFeedExplore()
+        return response.map { it.toDomain() }
+    }
 
-    suspend fun getFeedExplore(): List<FeedExplore> {
-        val response = api.getFeedExplore()
-        FeedExploreProvider.feedExploreList = response
-        return response
+    suspend fun getUserFromApi(email: String): List<UserModel> {
+        val response: List<User> = api.getUser(email)
+        return response.map { it.toDomain() }
+    }
+
+    suspend fun getFeedExploreFromDataBase(): List<CreationModel> {
+        val response: List<CreationEntity> = creationsDao.getAllCompletedPublications()
+        return response.map { it.toDomain() }
+    }
+
+    suspend fun getUserFromDataBase(email: String): List<UserModel> {
+        val response: List<UserEntity> = userDao.getUserInfo(email)
+        return response.map { it.toDomain() }
+    }
+
+    suspend fun insertUsers(user: List<UserEntity>) {
+        userDao.insertUser(user)
+    }
+
+    suspend fun insertCreations(creation: List<CreationEntity>) {
+        creationsDao.insertPublication(creation)
+    }
+
+    suspend fun clearUsers() {
+        userDao.deleteAllUsers()
+    }
+
+    suspend fun clearPublications() {
+        creationsDao.deleteAllPublications()
     }
 
     suspend fun getFeedFavorite(email: String): List<FeedFavorites> {
@@ -34,12 +73,6 @@ class MainRepository {
         return response
     }
 
-    suspend fun getUser(email: String): List<User> {
-        val response = api.getUser(email)
-        UserProvider.UserData = response
-        return response
-    }
-
     suspend fun editUser(
         email: String,
         name: String,
@@ -48,7 +81,6 @@ class MainRepository {
         userPhoto: String
     ): List<User> {
         val response = api.editUser(email, name, lastname, password, userPhoto)
-        UserProvider.UserData = response
         return response
     }
 

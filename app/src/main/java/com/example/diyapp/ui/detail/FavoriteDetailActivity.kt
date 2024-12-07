@@ -11,7 +11,9 @@ import com.example.diyapp.data.adapter.create.ImageUtils
 import com.example.diyapp.data.adapter.explore.InstructionsAdapter
 import com.example.diyapp.databinding.ActivityFavoriteDetailBinding
 import com.example.diyapp.ui.viewmodel.FavoriteDetailViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoriteDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityFavoriteDetailBinding

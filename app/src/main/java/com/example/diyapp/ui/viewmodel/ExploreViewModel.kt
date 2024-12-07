@@ -3,16 +3,20 @@ package com.example.diyapp.ui.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.diyapp.data.adapter.explore.FeedExplore
+import com.example.diyapp.data.model.CreationModel
 import com.example.diyapp.domain.UseCases
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ExploreViewModel : ViewModel() {
+@HiltViewModel
+class ExploreViewModel @Inject constructor(
+    private val useCases: UseCases
+) : ViewModel() {
 
-    val feed = MutableLiveData<List<FeedExplore>>()
+    val feed = MutableLiveData<List<CreationModel>>()
     val isLoading = MutableLiveData<Boolean>()
     val showNoPublicationsMessage = MutableLiveData<Boolean>()
-    val useCases = UseCases()
 
     fun loadFeed() {
         isLoading.value = true

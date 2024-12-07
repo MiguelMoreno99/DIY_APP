@@ -14,8 +14,10 @@ import com.example.diyapp.data.SessionManager
 import com.example.diyapp.data.adapter.explore.FeedExploreAdapter
 import com.example.diyapp.databinding.FragmentExploreBinding
 import com.example.diyapp.ui.viewmodel.ExploreViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ExploreFragment : Fragment() {
 
     private var _binding: FragmentExploreBinding? = null
